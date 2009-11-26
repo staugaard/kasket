@@ -3,6 +3,7 @@ require 'activesupport'
 module CacheBack
   autoload :ReadMixin, 'cache_back/read_mixin'
   autoload :WriteMixin, 'cache_back/write_mixin'
+  autoload :DirtyMixin, 'cache_back/dirty_mixin'
 
   module ConfigurationMixin
     def cache_back_version(version)
@@ -35,19 +36,8 @@ module CacheBack
 
       include WriteMixin unless instance_methods.include?('store_in_cache_back')
       extend ReadMixin unless methods.include?('find_one_with_cache_back')
+      extend DirtyMixin unless methods.include?('cache_back_dirty_methods')
     end
 
-    def cache_back_dirty_methods(*method_names)
-      method_names.each do |method|
-        unless method_defined?("without_cache_back_update_#{method}")
-          alias_method("without_cache_back_update_#{method}", method)
-          define_method(method) do |*args|
-            result = send("without_cache_back_update_#{method}", *args)
-            store_in_cache_back
-            result
-          end
-        end
-      end
-    end
   end
 end
