@@ -13,4 +13,9 @@ module CacheBack
 end
 
 ActiveRecord::Base.extend(CacheBack::ConfigurationMixin)
-ActionController::Dispatcher.middleware.use(CacheBack::Middleware)
+begin
+  ActionController::Dispatcher.middleware.use(CacheBack::Middleware)
+rescue NameError => e
+  
+end
+
