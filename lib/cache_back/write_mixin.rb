@@ -23,6 +23,7 @@ module CacheBack
 
     def self.included(model_class)
       #model_class.after_save :store_in_cache_back
+      model_class.after_update :remove_from_cache_back
       model_class.after_destroy :remove_from_cache_back
     end
   end
