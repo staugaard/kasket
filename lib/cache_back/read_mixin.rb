@@ -8,7 +8,7 @@ module CacheBack
     end
 
     def find_one_with_cache_back(id, options)
-      record = CacheBack.cache.read(cache_back_key_for(id)) if cache_safe?(options)
+      record = cache_safe?(options) ? CacheBack.cache.read(cache_back_key_for(id)) : nil
 
       if record.nil?
         record = find_one_without_cache_back(id, options)

@@ -63,6 +63,11 @@ end
 class Post < ActiveRecord::Base
   belongs_to :blog
   has_many :comments
+
+  def make_dirty!
+    self.updated_at = Time.now
+    self.connection.execute("UPDATE posts SET updated_at = '#{updated_at.utc.to_s(:db)}' WHERE id = #{id}")
+  end
 end
 
 class Blog < ActiveRecord::Base

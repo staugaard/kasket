@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/helper'
 
-class FindOneBack < ActiveSupport::TestCase
+class FindOneTest < ActiveSupport::TestCase
   fixtures :blogs, :posts
 
   Post.has_cache_back
