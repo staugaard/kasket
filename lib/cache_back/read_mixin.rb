@@ -21,7 +21,7 @@ module CacheBack
     private
 
       def cache_safe?(options)
-        !options.has_key?(:select)
+        options[:select].nil?
       end
 
   end

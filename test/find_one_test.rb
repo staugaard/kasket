@@ -24,6 +24,9 @@ class FindOneTest < ActiveSupport::TestCase
     Post.find(post.id)
     assert(Rails.cache.read(post.cache_back_key))
 
+    CacheBack.cache.expects(:read)
+    Post.find(post.id, :select => nil)
+
     CacheBack.cache.expects(:read).never
     Post.find(post.id, :select => 'title')
   end
