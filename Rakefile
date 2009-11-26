@@ -5,8 +5,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "cache_back"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{A write back caching layer on active record}
+    gem.description = %Q{A rewrite of cache money}
     gem.email = "mick@staugaard.com"
     gem.homepage = "http://github.com/staugaard/cache_back"
     gem.authors = ["Mick Staugaard"]
