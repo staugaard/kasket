@@ -1,5 +1,5 @@
 module CacheBack
-  class Middleware
+  class RackMiddleware
     def initialize(app)
       @app = app
     end
