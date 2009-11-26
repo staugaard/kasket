@@ -13,6 +13,11 @@ module CacheBack
       Rails.cache.write(*args)
     end
 
+    def delete(*args)
+      @local_cache.delete(args[0])
+      Rails.cache.delete(*args)
+    end
+
     def reset!
       @local_cache = {}
     end
