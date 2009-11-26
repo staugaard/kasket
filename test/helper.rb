@@ -21,6 +21,8 @@ class ActiveSupport::TestCase
 
   fixtures :all
 
+  setup :clear_cache
+
   def create_fixtures(*table_names)
     if block_given?
       Fixtures.create_fixtures(Test::Unit::TestCase.fixture_path, table_names) { yield }
@@ -36,6 +38,10 @@ class ActiveSupport::TestCase
   self.use_instantiated_fixtures  = false
 
   # Add more helper methods to be used by all tests here...
+  def clear_cache
+    CacheBack.cache.reset!
+    Rails.cache.clear
+  end
 end
 
 ActiveSupport::TestCase.fixture_path = File.dirname(__FILE__) + "/fixtures/"
@@ -43,8 +49,8 @@ $LOAD_PATH.unshift(ActiveSupport::TestCase.fixture_path)
 
 module Rails
   module_function
-  CACHE = ActiveSupport::Cache::MemCacheStore.new("localhost")
-  
+  CACHE = ActiveSupport::Cache::MemoryStore.new
+
   def cache
     CACHE
   end

@@ -8,15 +8,21 @@ module CacheBack
     end
 
     def find_one_with_cache_back(id, options)
-      record = CacheBack.cache.read(cache_back_key_for(id))
+      record = CacheBack.cache.read(cache_back_key_for(id)) if cache_safe?(options)
 
-      unless record
+      if record.nil?
         record = find_one_without_cache_back(id, options)
         record.store_in_cache_back if record
       end
 
       record
     end
+
+    private
+
+      def cache_safe?(options)
+        !options.has_key?(:select)
+      end
 
   end
 end

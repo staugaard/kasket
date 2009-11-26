@@ -12,7 +12,9 @@ module CacheBack
     end
 
     def store_in_cache_back
-      CacheBack.cache.write(cache_back_key, shallow_clone, self.class.inherited_cache_back_options) if cache_back_key
+      if !readonly? && cache_back_key
+        CacheBack.cache.write(cache_back_key, shallow_clone, self.class.inherited_cache_back_options)
+      end
     end
 
     def remove_from_cache_back
