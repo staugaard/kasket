@@ -27,7 +27,7 @@ module CacheBack
     end
 
     def cache_back_key_for(id)
-      "cache_back/#{name}/version_#{inherited_cache_back_version}/#{id}"
+      "cache_back/#{table_name}/version_#{inherited_cache_back_version}/#{id}"
     end
 
     def has_cache_back(options = {})
