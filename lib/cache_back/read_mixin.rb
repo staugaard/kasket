@@ -4,18 +4,38 @@ module CacheBack
     def self.extended(model_class)
       class << model_class
         alias_method_chain :find_one, :cache_back
+        alias_method_chain :find_some, :cache_back
       end
     end
 
     def find_one_with_cache_back(id, options)
-      record = cache_safe?(options) ? CacheBack.cache.read(cache_back_key_for(id)) : nil
+      if cache_safe?(options)
+        unless record = CacheBack.cache.read(cache_back_key_for(id))
+          record = find_one_without_cache_back(id, options)
+          record.store_in_cache_back if record
+        end
 
-      if record.nil?
-        record = find_one_without_cache_back(id, options)
-        record.store_in_cache_back if record
+        record
+      else
+        find_one_without_cache_back(id, options)
       end
+    end
 
-      record
+    def find_some_with_cache_back(ids, options)
+      if cache_safe?(options)
+        cached_records = ids.map { |id| CacheBack.cache.read(cache_back_key_for(id)) }.compact
+
+        missing_ids = ids.map(&:to_i) - cached_records.map(&:id)
+
+        return cached_records if missing_ids.empty?
+
+        db_records = find_some_without_cache_back(missing_ids, options)
+        db_records.each { |record| record.store_in_cache_back if record }
+
+        (cached_records.compact + db_records.compact).sort { |x, y| x.id <=> y.id}
+      else
+        find_some_without_cache_back(ids, options)
+      end
     end
 
     private

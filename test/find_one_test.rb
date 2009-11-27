@@ -8,10 +8,10 @@ class FindOneTest < ActiveSupport::TestCase
   should "cache find(id) calls" do
     post = Post.first
     assert_nil(Rails.cache.read(post.cache_back_key))
-    Post.find(post.id)
+    assert_equal(post, Post.find(post.id))
     assert(Rails.cache.read(post.cache_back_key))
     Post.connection.expects(:select_all).never
-    Post.find(post.id)
+    assert_equal(post, Post.find(post.id))
   end
 
   should "not use cache when using the :select option" do
