@@ -3,7 +3,7 @@ module CacheBack
     module ClassMethods
       def remove_from_cache_back(ids)
         Array(ids).each do |id|
-          CacheBack.cache.delete(cache_back_key_for(id))
+          CacheBack.cache.delete(cache_back_key_for_id(id))
         end
       end
 
@@ -22,7 +22,7 @@ module CacheBack
       end
 
       def cache_back_key
-        @cache_back_key ||= new_record? ? nil : self.class.cache_back_key_for(id)
+        @cache_back_key ||= new_record? ? nil : self.class.cache_back_key_for_id(id)
       end
 
       def store_in_cache_back

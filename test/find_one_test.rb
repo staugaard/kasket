@@ -30,4 +30,15 @@ class FindOneTest < ActiveSupport::TestCase
     CacheBack.cache.expects(:read).never
     Post.find(post.id, :select => 'title')
   end
+
+  should "respect scope" do
+    post = Post.find(Post.first.id)
+    other_blog = Blog.first(:conditions => "id != #{post.blog_id}")
+
+    assert(Rails.cache.read(post.cache_back_key))
+
+    assert_raise(ActiveRecord::RecordNotFound) do
+      other_blog.posts.find(post.id)
+    end
+  end
 end

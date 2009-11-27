@@ -26,18 +26,45 @@ module CacheBack
       end
     end
 
-    def cache_back_key_for(id)
-      "cache_back/#{table_name}/version_#{inherited_cache_back_version}/#{id}"
+    def cache_back_key_for(attribute_value_pairs)
+      key = "cache_back/#{table_name}/version=#{inherited_cache_back_version}"
+      attribute_value_pairs.each do |attribute, value|
+        key << "/#{attribute}="
+        if value.is_a?(Array)
+          key << value.join(',')
+        else
+          key << value.to_s
+        end
+      end
+      key
+    end
+
+    def cache_back_key_for_id(id)
+      cache_back_key_for([['id', id]])
+    end
+
+    def has_cache_back_index_on?(sorted_attributes)
+      result = (@cache_back_indices ||= []).include?(sorted_attributes)
+      result ||= superclass.has_cache_back_index_on?(sorted_attributes) if self != ActiveRecord::Base
+      result
     end
 
     def has_cache_back(options = {})
-      @cache_back_version = options.delete(:version) || '1'
-      @cache_back_option = options
-
-      include WriteMixin unless instance_methods.include?('store_in_cache_back')
-      extend ReadMixin unless methods.include?('find_one_with_cache_back')
-      extend DirtyMixin unless methods.include?('cache_back_dirty_methods')
+      has_cache_back_on :id
     end
 
+    def has_cache_back_on(*args)
+      options = args.extract_options!
+      attributes = args.sort! { |x, y| x.to_s <=> y.to_s }
+
+      @cache_back_version = options.delete(:version) || '1'
+      @cache_back_option = options
+      @cache_back_indices ||= []
+      @cache_back_indices << attributes unless @cache_back_indices.include?(attributes)
+
+      include WriteMixin unless instance_methods.include?('store_in_cache_back')
+      extend ReadMixin unless methods.include?('without_cache_back')
+      extend DirtyMixin unless methods.include?('cache_back_dirty_methods')
+    end
   end
 end

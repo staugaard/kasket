@@ -1,2 +1,5 @@
 a_blog:
   name: My Blog
+
+other_blog:
+  name: Some Other Blog
