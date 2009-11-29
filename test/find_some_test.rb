@@ -4,6 +4,7 @@ class FindSomeTest < ActiveSupport::TestCase
   fixtures :blogs, :posts
 
   Post.has_cache_back
+  Post.has_cache_back_on :blog_id
 
   should "cache find(id, id) calls" do
     post1 = Post.first
@@ -35,5 +36,14 @@ class FindSomeTest < ActiveSupport::TestCase
     Post.expects(:find_some_without_cache_back).never
     found_posts = Post.find(post1.id, post2.id)
     assert_equal([post1, post2].map(&:id).sort, found_posts.map(&:id).sort)
+  end
+
+  should "cache on index other than primary key" do
+    blog = blogs(:a_blog)
+    posts = Post.find_all_by_blog_id(blog.id)
+
+    Post.expects(:find_every_without_cache_back).never
+
+    assert_equal(posts, Post.find_all_by_blog_id(blog.id))
   end
 end

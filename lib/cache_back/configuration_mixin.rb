@@ -1,4 +1,4 @@
-require 'activesupport'
+require 'active_support'
 
 module CacheBack
   autoload :ReadMixin, 'cache_back/read_mixin'
@@ -43,10 +43,14 @@ module CacheBack
       cache_back_key_for([['id', id]])
     end
 
+    def cache_back_indices
+      result = @cache_back_indices || []
+      result += superclass.cache_back_indices unless self == ActiveRecord::Base
+      result.uniq
+    end
+
     def has_cache_back_index_on?(sorted_attributes)
-      result = (@cache_back_indices ||= []).include?(sorted_attributes)
-      result ||= superclass.has_cache_back_index_on?(sorted_attributes) if self != ActiveRecord::Base
-      result
+      cache_back_indices.include?(sorted_attributes)
     end
 
     def has_cache_back(options = {})
@@ -57,8 +61,13 @@ module CacheBack
       options = args.extract_options!
       attributes = args.sort! { |x, y| x.to_s <=> y.to_s }
 
-      @cache_back_version = options.delete(:version) || '1'
-      @cache_back_option = options
+      @cache_back_version ||= options.delete(:version) || '1'
+      @cache_back_option ||= options
+
+      if attributes != [:id] && !cache_back_indices.include?([:id])
+        has_cache_back_on(:id)
+      end
+
       @cache_back_indices ||= []
       @cache_back_indices << attributes unless @cache_back_indices.include?(attributes)
 

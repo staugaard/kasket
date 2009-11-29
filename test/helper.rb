@@ -16,12 +16,14 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'cache_back'
 
+CacheBack.setup
+
 class ActiveSupport::TestCase
   include ActiveRecord::TestFixtures
 
   fixtures :all
 
-  setup :clear_cache
+  #setup :clear_cache
 
   def create_fixtures(*table_names)
     if block_given?

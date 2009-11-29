@@ -21,12 +21,22 @@ module CacheBack
     def find_every_with_cache_back(options)
       attribute_value_pairs = cache_back_conditions_parser.attribute_value_pairs(options, scope(:find)) if cache_safe?(options)
 
-      if attribute_value_pairs && has_cache_back_index_on?(attribute_value_pairs.map(&:first))
-        unless records = CacheBack.cache.read(cache_back_key_for(attribute_value_pairs))
+      limit = (options[:limit] || (scope(:find) || {})[:limit])
+
+      if (limit.nil? || limit == 1) && attribute_value_pairs && has_cache_back_index_on?(attribute_value_pairs.map(&:first))
+        collection_key = cache_back_key_for(attribute_value_pairs)
+        collection_key << '/first' if limit == 1
+        unless records = CacheBack.cache.read(collection_key)
           records = without_cache_back do
             find_every_without_cache_back(options)
           end
-          records.each { |record| record.store_in_cache_back if record }
+
+          if records.size == 1
+            CacheBack.cache.write(collection_key, records[0])
+          elsif records.size <= CacheBack::CONFIGURATION[:max_collection_size]
+            records.each { |record| record.store_in_cache_back if record }
+            CacheBack.cache.write(collection_key, records.map(&:cache_back_key))
+          end
         end
 
         Array(records)
@@ -41,7 +51,9 @@ module CacheBack
       attribute_value_pairs = cache_back_conditions_parser.attribute_value_pairs(options, scope(:find)) if cache_safe?(options)
       attribute_value_pairs << [:id, ids] if attribute_value_pairs
 
-      if attribute_value_pairs && has_cache_back_index_on?(attribute_value_pairs.map(&:first))
+      limit = (options[:limit] || (scope(:find) || {})[:limit])
+
+      if limit.nil? && attribute_value_pairs && has_cache_back_index_on?(attribute_value_pairs.map(&:first))
         id_to_key_map = Hash[ids.uniq.map { |id| [id, cache_back_key_for_id(id)] }]
         cached_record_map = CacheBack.cache.get_multi(id_to_key_map.values)
 
@@ -68,7 +80,8 @@ module CacheBack
 
       def cache_safe?(options)
         @use_cache_back != false && [options, scope(:find) || {}].all? do |hash|
-          hash[:select].nil? && hash[:joins].nil? && hash[:order].nil?
+          result = hash[:select].nil? && hash[:joins].nil? && hash[:order].nil? && hash[:offset].nil?
+          result && (options[:limit].nil? || options[:limit] == 1)
         end
       end
 

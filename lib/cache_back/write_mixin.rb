@@ -14,29 +14,35 @@ module CacheBack
     end
 
     module InstanceMethods
-      def shallow_clone
-        clone = self.class.new
-        clone.instance_variable_set("@attributes", instance_variable_get(:@attributes))
-        clone.instance_variable_set("@new_record", new_record?)
-        clone
-      end
-
       def cache_back_key
         @cache_back_key ||= new_record? ? nil : self.class.cache_back_key_for_id(id)
       end
 
       def store_in_cache_back
         if !readonly? && cache_back_key
-          CacheBack.cache.write(cache_back_key, shallow_clone, self.class.inherited_cache_back_options)
+          CacheBack.cache.write(cache_back_key, self, self.class.inherited_cache_back_options)
         end
       end
 
-      def remove_from_cache_back
-        CacheBack.cache.delete(cache_back_key) if cache_back_key
+      def clear_cache_back_indices
+        new_attributes = attributes.symbolize_keys
+
+        old_attributes = Hash[changes.map {|attribute, values| [attribute, values[0]]}].symbolize_keys
+        old_attributes.reverse_merge!(new_attributes)
+
+        self.class.cache_back_indices.each do |index|
+          old_key = self.class.cache_back_key_for(index.map { |attribute| [attribute, old_attributes[attribute]]})
+          new_key = self.class.cache_back_key_for(index.map { |attribute| [attribute, new_attributes[attribute]]})
+
+          [old_key, new_key].uniq.each do |key|
+            CacheBack.cache.delete(key)
+            CacheBack.cache.delete("#{key}/first")
+          end
+        end
       end
 
       def reload_with_cache_back_clearing(*args)
-        remove_from_cache_back
+        clear_cache_back_indices
         reload_without_cache_back_clearing(*args)
       end
     end
@@ -45,9 +51,9 @@ module CacheBack
       model_class.extend         ClassMethods
       model_class.send :include, InstanceMethods
 
-      #model_class.after_save :store_in_cache_back
-      model_class.after_update :remove_from_cache_back
-      model_class.after_destroy :remove_from_cache_back
+      model_class.after_save :clear_cache_back_indices
+      model_class.after_destroy :clear_cache_back_indices
+
       model_class.alias_method_chain :reload, :cache_back_clearing
 
       class << model_class

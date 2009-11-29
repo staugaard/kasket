@@ -6,7 +6,7 @@ module CacheBack
           alias_method("without_cache_back_update_#{method}", method)
           define_method(method) do |*args|
             result = send("without_cache_back_update_#{method}", *args)
-            store_in_cache_back
+            clear_cache_back_indices
             result
           end
         end
