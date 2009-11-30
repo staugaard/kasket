@@ -19,7 +19,7 @@ module CacheBack
     end
 
     def find_every_with_cache_back(options)
-      attribute_value_pairs = cache_back_conditions_parser.attribute_value_pairs(options, scope(:find)) if cache_safe?(options)
+      attribute_value_pairs = cache_back_conditions_parser.attribute_value_pairs(options) if cache_safe?(options)
 
       limit = (options[:limit] || (scope(:find) || {})[:limit])
 
@@ -48,7 +48,7 @@ module CacheBack
     end
 
     def find_some_with_cache_back(ids, options)
-      attribute_value_pairs = cache_back_conditions_parser.attribute_value_pairs(options, scope(:find)) if cache_safe?(options)
+      attribute_value_pairs = cache_back_conditions_parser.attribute_value_pairs(options) if cache_safe?(options)
       attribute_value_pairs << [:id, ids] if attribute_value_pairs
 
       limit = (options[:limit] || (scope(:find) || {})[:limit])
@@ -88,6 +88,5 @@ module CacheBack
       def cache_back_conditions_parser
         @cache_back_conditions_parser ||= CacheBack::ConditionsParser.new(self)
       end
-
   end
 end

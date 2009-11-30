@@ -27,16 +27,8 @@ module CacheBack
     end
 
     def cache_back_key_for(attribute_value_pairs)
-      key = "cache_back/#{table_name}/version=#{inherited_cache_back_version}"
-      attribute_value_pairs.each do |attribute, value|
-        key << "/#{attribute}="
-        if value.is_a?(Array)
-          key << value.join(',')
-        else
-          key << value.to_s
-        end
-      end
-      key
+      key = "cache_back/#{table_name}/version=#{inherited_cache_back_version}/"
+      key << attribute_value_pairs.map {|attribute, value| attribute.to_s + '=' + value.to_s}.join('/')
     end
 
     def cache_back_key_for_id(id)

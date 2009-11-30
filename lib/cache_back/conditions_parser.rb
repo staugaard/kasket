@@ -4,57 +4,64 @@ module CacheBack
       @model_class = model_class
     end
 
-    def attribute_value_pairs(options, scope)
-      from_scope = attribute_value_pairs_for_conditions((scope || {})[:conditions])
-      return nil unless from_scope
+    def attribute_value_pairs(options)
+      #pulls out the conditions from each hash
+      condition_fragments = [options[:conditions]]
 
-      from_options = attribute_value_pairs_for_conditions(options[:conditions])
-      return nil unless from_options
-
-      pairs = from_scope.inject(from_options) do |memo, pair|
-        attribute = pair[0]
-        if memo_pair = memo.find{ |p| p[0] == attribute}
-          memo_pair[0] = Array(memo_pair[0])
-          memo_pair[0] << pair[1]
-        else
-          memo << pair
-        end
+      #add the scope to the mix
+      if scope = @model_class.send(:scope, :find)
+        condition_fragments << scope[:conditions]
       end
 
-      pairs.sort! { |pair1, pair2| pair1[0] <=> pair2[0] }
+      #add the type if we are on STI
+      condition_fragments << {:type => @model_class.name} if @model_class.finder_needs_type_condition?
 
-      pairs.map do |attribute, value|
-        if value.is_a?(Array)
-          value.flatten!
-          if value.size == 1
-            [attribute.to_sym, value[0]]
-          else
-            [attribute.to_sym, value]
-          end
-        else
-          [attribute.to_sym, value]
-        end
+      condition_fragments.compact!
+
+      #parses each conditions fragment but bails if one of the did not parse
+      attributes_fragments = condition_fragments.map do |condition_fragment|
+        attributes_fragment = attributes_for_conditions(condition_fragment)
+        return nil unless attributes_fragment
+        attributes_fragment
       end
+
+      #merges the hashes but bails if there is an overlap
+      attributes = attributes_fragments.inject({}) do |memo, attributes_fragment|
+        attributes_fragment.each do |attribute, value|
+          return nil if memo.has_key?(attribute)
+          memo[attribute] = value
+        end
+        memo
+      end
+
+      attributes.keys.sort.map { |attribute| [attribute.to_sym, attributes[attribute]] }
     end
 
-    def attribute_value_pairs_for_conditions(conditions)
-      case conditions
-      when Hash
-        conditions.to_a.collect { |key, value| [key.to_s, value] }
-      when String
-        parse_indices_from_condition(conditions)
-      when Array
-        parse_indices_from_condition(*conditions)
-      when NilClass
-        []
+    def attributes_for_conditions(conditions)
+      pairs = case conditions
+        when Hash
+          return conditions.stringify_keys
+        when String
+          parse_indices_from_condition(conditions)
+        when Array
+          parse_indices_from_condition(*conditions)
+        when NilClass
+          []
+      end
+
+      return nil unless pairs
+
+      pairs.inject({}) do |memo, pair|
+        return nil if memo.has_key?(pair[0])
+        memo[pair[0]] = pair[1]
+        memo
       end
     end
 
     AND = /\s+AND\s+/i
     TABLE_AND_COLUMN = /(?:(?:`|")?(\w+)(?:`|")?\.)?(?:`|")?(\w+)(?:`|")?/ # Matches: `users`.id, `users`.`id`, users.id, id
     VALUE = /'?(\d+|\?|(?:(?:[^']|'')*))'?/                     # Matches: 123, ?, '123', '12''3'
-    KEY_EQ_VALUE = /^\(?#{TABLE_AND_COLUMN}\s+=\s+#{VALUE}\)?$/ # Matches: KEY = VALUE, (KEY = VALUE)
-    ORDER = /^#{TABLE_AND_COLUMN}\s*(ASC|DESC)?$/i              # Matches: COLUMN ASC, COLUMN DESC, COLUMN
+    KEY_EQ_VALUE = /^[\(\s]*#{TABLE_AND_COLUMN}\s+=\s+#{VALUE}[\)\s]*$/ # Matches: KEY = VALUE, (KEY = VALUE), ()(KEY = VALUE))
 
     def parse_indices_from_condition(conditions = '', *values)
       values = values.dup
