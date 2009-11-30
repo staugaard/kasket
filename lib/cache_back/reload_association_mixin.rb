@@ -4,7 +4,7 @@ module CacheBack
       # TODO we could calculate the right key to clear by parsing the association conditions.
       # this would clear less keys, and we would not have to load the target
       load_target
-      target.clear_cache_back_indices if target.respond_to?(:clear_cache_back_indices)
+      target.clear_local_cache_back_indices if target.respond_to?(:clear_local_cache_back_indices)
       reload_without_cache_back_clearing(*args)
     end
 

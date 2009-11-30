@@ -24,25 +24,39 @@ module CacheBack
         end
       end
 
-      def clear_cache_back_indices
+      def cache_back_keys
         new_attributes = attributes.symbolize_keys
 
         old_attributes = Hash[changes.map {|attribute, values| [attribute, values[0]]}].symbolize_keys
         old_attributes.reverse_merge!(new_attributes)
 
+        keys = []
         self.class.cache_back_indices.each do |index|
           old_key = self.class.cache_back_key_for(index.map { |attribute| [attribute, old_attributes[attribute]]})
           new_key = self.class.cache_back_key_for(index.map { |attribute| [attribute, new_attributes[attribute]]})
 
           [old_key, new_key].uniq.each do |key|
-            CacheBack.cache.delete(key)
-            CacheBack.cache.delete("#{key}/first")
+            keys << key
+            keys << "#{key}/first"
           end
+        end
+        keys
+      end
+
+      def clear_cache_back_indices
+        cache_back_keys.each do |key|
+          CacheBack.cache.delete(key)
+        end
+      end
+
+      def clear_local_cache_back_indices
+        cache_back_keys.each do |key|
+          CacheBack.cache.delete_local(key)
         end
       end
 
       def reload_with_cache_back_clearing(*args)
-        clear_cache_back_indices
+        clear_local_cache_back_indices
         reload_without_cache_back_clearing(*args)
       end
     end

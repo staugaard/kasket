@@ -54,6 +54,12 @@ module CacheBack
       Rails.cache.delete(*args)
     end
 
+    def delete_local(*keys)
+      keys.each do |key|
+        @local_cache.delete(key)
+      end
+    end
+
     def reset!
       @local_cache = {}
     end
