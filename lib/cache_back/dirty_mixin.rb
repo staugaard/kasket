@@ -12,5 +12,7 @@ module CacheBack
         end
       end
     end
+
+    alias_method :cache_back_dirty_method, :cache_back_dirty_methods
   end
 end
