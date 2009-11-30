@@ -20,7 +20,7 @@ module CacheBack
 
       def store_in_cache_back
         if !readonly? && cache_back_key
-          CacheBack.cache.write(cache_back_key, self, self.class.inherited_cache_back_options)
+          CacheBack.cache.write(cache_back_key, self)
         end
       end
 

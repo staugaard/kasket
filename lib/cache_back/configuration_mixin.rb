@@ -1,4 +1,5 @@
 require 'active_support'
+require 'zlib'
 
 module CacheBack
   autoload :ReadMixin, 'cache_back/read_mixin'
@@ -6,29 +7,12 @@ module CacheBack
   autoload :DirtyMixin, 'cache_back/dirty_mixin'
 
   module ConfigurationMixin
-    def cache_back_version(version)
-      @cache_back_version = version.to_s
-    end
-
-    def inherited_cache_back_version
-      if self == ActiveRecord::Base
-        @cache_back_version
-      else
-        @cache_back_version ||= superclass.inherited_cache_back_version
-      end
-    end
-
-    def inherited_cache_back_options
-      if self == ActiveRecord::Base
-        @cache_back_option
-      else
-        @cache_back_option ||= superclass.inherited_cache_back_options
-      end
+    def cache_back_key_prefix
+      @cache_back_key_prefix ||= "cache_back/#{table_name}/version=#{Zlib.crc32(column_names.sort.join)}/"
     end
 
     def cache_back_key_for(attribute_value_pairs)
-      key = "cache_back/#{table_name}/version=#{inherited_cache_back_version}/"
-      key << attribute_value_pairs.map {|attribute, value| attribute.to_s + '=' + value.to_s}.join('/')
+      cache_back_key_prefix + attribute_value_pairs.map {|attribute, value| attribute.to_s + '=' + value.to_s}.join('/')
     end
 
     def cache_back_key_for_id(id)
@@ -50,12 +34,7 @@ module CacheBack
     end
 
     def has_cache_back_on(*args)
-      options = args.extract_options!
       attributes = args.sort! { |x, y| x.to_s <=> y.to_s }
-
-      @cache_back_version ||= options.delete(:version) || '1'
-      @cache_back_option ||= options
-
       if attributes != [:id] && !cache_back_indices.include?([:id])
         has_cache_back_on(:id)
       end

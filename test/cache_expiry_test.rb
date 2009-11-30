@@ -20,12 +20,12 @@ class CacheExpiryTest < ActiveSupport::TestCase
     end
 
     should "clear all indices for instance when deleted" do
-      CacheBack.cache.expects(:delete).with("cache_back/posts/version=1/id=#{@post.id}")
-      CacheBack.cache.expects(:delete).with("cache_back/posts/version=1/id=#{@post.id}/first")
-      CacheBack.cache.expects(:delete).with("cache_back/posts/version=1/title=#{@post.title}")
-      CacheBack.cache.expects(:delete).with("cache_back/posts/version=1/title=#{@post.title}/first")
-      CacheBack.cache.expects(:delete).with("cache_back/posts/version=1/blog_id=#{@post.blog_id}")
-      CacheBack.cache.expects(:delete).with("cache_back/posts/version=1/blog_id=#{@post.blog_id}/first")
+      CacheBack.cache.expects(:delete).with(Post.cache_back_key_prefix + "id=#{@post.id}")
+      CacheBack.cache.expects(:delete).with(Post.cache_back_key_prefix + "id=#{@post.id}/first")
+      CacheBack.cache.expects(:delete).with(Post.cache_back_key_prefix + "title=#{@post.title}")
+      CacheBack.cache.expects(:delete).with(Post.cache_back_key_prefix + "title=#{@post.title}/first")
+      CacheBack.cache.expects(:delete).with(Post.cache_back_key_prefix + "blog_id=#{@post.blog_id}")
+      CacheBack.cache.expects(:delete).with(Post.cache_back_key_prefix + "blog_id=#{@post.blog_id}/first")
       CacheBack.cache.expects(:delete).never
 
       @post.destroy
@@ -38,14 +38,14 @@ class CacheExpiryTest < ActiveSupport::TestCase
     end
 
     should "clear all indices for instance when updated" do
-      CacheBack.cache.expects(:delete).with("cache_back/posts/version=1/id=#{@post.id}")
-      CacheBack.cache.expects(:delete).with("cache_back/posts/version=1/id=#{@post.id}/first")
-      CacheBack.cache.expects(:delete).with("cache_back/posts/version=1/title=#{@post.title}")
-      CacheBack.cache.expects(:delete).with("cache_back/posts/version=1/title=#{@post.title}/first")
-      CacheBack.cache.expects(:delete).with("cache_back/posts/version=1/title=new title")
-      CacheBack.cache.expects(:delete).with("cache_back/posts/version=1/title=new title/first")
-      CacheBack.cache.expects(:delete).with("cache_back/posts/version=1/blog_id=#{@post.blog_id}")
-      CacheBack.cache.expects(:delete).with("cache_back/posts/version=1/blog_id=#{@post.blog_id}/first")
+      CacheBack.cache.expects(:delete).with(Post.cache_back_key_prefix + "id=#{@post.id}")
+      CacheBack.cache.expects(:delete).with(Post.cache_back_key_prefix + "id=#{@post.id}/first")
+      CacheBack.cache.expects(:delete).with(Post.cache_back_key_prefix + "title=#{@post.title}")
+      CacheBack.cache.expects(:delete).with(Post.cache_back_key_prefix + "title=#{@post.title}/first")
+      CacheBack.cache.expects(:delete).with(Post.cache_back_key_prefix + "title=new title")
+      CacheBack.cache.expects(:delete).with(Post.cache_back_key_prefix + "title=new title/first")
+      CacheBack.cache.expects(:delete).with(Post.cache_back_key_prefix + "blog_id=#{@post.blog_id}")
+      CacheBack.cache.expects(:delete).with(Post.cache_back_key_prefix + "blog_id=#{@post.blog_id}/first")
       CacheBack.cache.expects(:delete).never
 
       @post.title = "new title"
