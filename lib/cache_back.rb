@@ -5,7 +5,6 @@ require 'active_support'
 require 'cache_back/configuration_mixin'
 require 'cache_back/reload_association_mixin'
 require 'cache_back/cache'
-require 'cache_back/rack_middleware'
 
 module CacheBack
   CONFIGURATION = {:max_collection_size => 100}
