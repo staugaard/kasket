@@ -2,6 +2,7 @@ require 'rubygems'
 require 'active_record'
 require 'active_support'
 
+require 'kasket/active_record_patches'
 require 'kasket/configuration_mixin'
 require 'kasket/reload_association_mixin'
 require 'kasket/cache'
@@ -45,3 +46,4 @@ module Kasket
     end
   end
 end
+
