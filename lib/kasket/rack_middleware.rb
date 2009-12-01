@@ -1,13 +1,13 @@
-module CacheBack
+module Kasket
   class RackMiddleware
     def initialize(app)
       @app = app
     end
 
     def call(env)
-      result = @app.call(env)
-      CacheBack.cache.reset!
-      result
+      @app.call(env)
+    ensure
+      Kasket.cache.clear_local
     end
   end
 end
