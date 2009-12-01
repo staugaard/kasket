@@ -2,7 +2,7 @@ module Kasket
   module ReloadAssociationMixin
     def reload_with_kasket_clearing(*args)
       if loaded?
-        clear_local_kasket_indices
+        clear_local_kasket_indices if respond_to?(:clear_local_kasket_indices)
       end
 
       # or maybe something like this?
