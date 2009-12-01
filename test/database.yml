@@ -1,7 +1,7 @@
 test:
   adapter: mysql
   encoding: utf8
-  database: cache_back_test
+  database: kasket_test
   username: root
   password:
   socket: /tmp/mysql.sock

@@ -14,9 +14,9 @@ load(File.dirname(__FILE__) + "/schema.rb")
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
-require 'cache_back'
+require 'kasket'
 
-CacheBack.setup
+Kasket.setup
 
 class ActiveSupport::TestCase
   include ActiveRecord::TestFixtures
@@ -41,7 +41,7 @@ class ActiveSupport::TestCase
 
   # Add more helper methods to be used by all tests here...
   def clear_cache
-    CacheBack.cache.reset!
+    Kasket.cache.reset!
     Rails.cache.clear
   end
 end

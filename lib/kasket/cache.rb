@@ -1,4 +1,4 @@
-module CacheBack
+module Kasket
   class Cache
     def initialize
       reset!

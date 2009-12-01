@@ -4,11 +4,11 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "cache_back"
+    gem.name = "kasket"
     gem.summary = %Q{A write back caching layer on active record}
     gem.description = %Q{A rewrite of cache money}
     gem.email = "mick@staugaard.com"
-    gem.homepage = "http://github.com/staugaard/cache_back"
+    gem.homepage = "http://github.com/staugaard/kasket"
     gem.authors = ["Mick Staugaard"]
     gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     gem.add_development_dependency "mocha", ">= 0"
@@ -49,7 +49,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "cache_back #{version}"
+  rdoc.title = "kasket #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end

@@ -1,4 +1,4 @@
-module CacheBack
+module Kasket
   class ConditionsParser
     def initialize(model_class)
       @model_class = model_class

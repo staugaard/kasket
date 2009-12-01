@@ -21,7 +21,6 @@ ActiveRecord::Schema.define(:version => 1) do
   create_table "posts", :force => true do |t|
     t.string   "title"
     t.integer  "blog_id"
-    t.string   "comments_cache_key"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
