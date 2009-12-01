@@ -23,8 +23,6 @@ class ActiveSupport::TestCase
 
   fixtures :all
 
-  #setup :clear_cache
-
   def create_fixtures(*table_names)
     if block_given?
       Fixtures.create_fixtures(Test::Unit::TestCase.fixture_path, table_names) { yield }
@@ -33,17 +31,9 @@ class ActiveSupport::TestCase
     end
   end
 
-  # Turn off transactional fixtures if you're working with MyISAM tables in MySQL
   self.use_transactional_fixtures = true
 
-  # Instantiated fixtures are slow, but give you @david where you otherwise would need people(:david)
   self.use_instantiated_fixtures  = false
-
-  # Add more helper methods to be used by all tests here...
-  def clear_cache
-    Kasket.cache.reset!
-    Rails.cache.clear
-  end
 end
 
 ActiveSupport::TestCase.fixture_path = File.dirname(__FILE__) + "/fixtures/"

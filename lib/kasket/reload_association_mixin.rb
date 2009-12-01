@@ -3,7 +3,7 @@ module Kasket
     def reload_with_kasket_clearing(*args)
       # TODO we could calculate the right key to clear by parsing the association conditions.
       # this would clear less keys
-      Kasket.cache.reset!
+      Kasket.cache.clear_local
       reload_without_kasket_clearing(*args)
     end
 

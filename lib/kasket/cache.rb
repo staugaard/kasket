@@ -1,7 +1,7 @@
 module Kasket
   class Cache
     def initialize
-      reset!
+      clear_local
     end
 
     def read(*args)
@@ -60,7 +60,11 @@ module Kasket
       end
     end
 
-    def reset!
+    def delete_matched_local(matcher)
+      @local_cache.delete_if { |k,v| k =~ matcher }
+    end
+
+    def clear_local
       @local_cache = {}
     end
 

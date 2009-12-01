@@ -26,7 +26,7 @@ module Kasket
     #sets up local cache clearing after each request
     begin
       ApplicationController.after_filter do
-        Kasket.cache.reset!
+        Kasket.cache.clear_local
       end
     rescue NameError => e
 
@@ -37,7 +37,7 @@ module Kasket
       ActiveSupport::TestCase.class_eval do
         setup :clear_cache
         def clear_cache
-          Kasket.cache.reset!
+          Kasket.cache.clear_local
           Rails.cache.clear if Rails.cache.respond_to?(:clear)
         end
       end
