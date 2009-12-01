@@ -25,22 +25,23 @@ module Kasket
       end
 
       def kasket_keys
-        new_attributes = attributes.symbolize_keys
+        attribute_sets = [attributes.symbolize_keys]
 
-        old_attributes = Hash[changes.map {|attribute, values| [attribute, values[0]]}].symbolize_keys
-        old_attributes.reverse_merge!(new_attributes)
+        if changed?
+          old_attributes = Hash[changes.map {|attribute, values| [attribute, values[0]]}].symbolize_keys
+          attribute_sets << old_attributes.reverse_merge(attribute_sets[0])
+        end
 
         keys = []
         self.class.kasket_indices.each do |index|
-          old_key = self.class.kasket_key_for(index.map { |attribute| [attribute, old_attributes[attribute]]})
-          new_key = self.class.kasket_key_for(index.map { |attribute| [attribute, new_attributes[attribute]]})
-
-          [old_key, new_key].uniq.each do |key|
-            keys << key
-            keys << "#{key}/first"
+          keys += attribute_sets.map do |attribute_set|
+            self.class.kasket_key_for(index.map { |attribute| [attribute, attribute_set[attribute]]})
           end
         end
-        keys
+
+        keys.uniq!
+        keys.map! {|key| [key, "#{key}/first"]}
+        keys.flatten!
       end
 
       def clear_kasket_indices

@@ -1,9 +1,14 @@
 module Kasket
   module ReloadAssociationMixin
     def reload_with_kasket_clearing(*args)
-      # TODO we could calculate the right key to clear by parsing the association conditions.
-      # this would clear less keys
-      Kasket.cache.clear_local
+      if loaded?
+        clear_local_kasket_indices
+      end
+
+      # or maybe something like this?
+      #target_class = proxy_reflection.options[:polymorphic] ? association_class : proxy_reflection.klass
+      #Kasket.cache.delete_matched_local(/^#{target_class.kasket_key_prefix}/) if target_class.respond_to?(:kasket_key_prefix)
+
       reload_without_kasket_clearing(*args)
     end
 

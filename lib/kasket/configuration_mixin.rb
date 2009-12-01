@@ -1,5 +1,4 @@
 require 'active_support'
-require 'zlib'
 
 module Kasket
   autoload :ReadMixin, 'kasket/read_mixin'
@@ -8,7 +7,7 @@ module Kasket
 
   module ConfigurationMixin
     def kasket_key_prefix
-      @kasket_key_prefix ||= "kasket/#{table_name}/version=#{Zlib.crc32(column_names.sort.join)}/"
+      @kasket_key_prefix ||= "kasket/#{table_name}/version=#{column_names.join.sum}/"
     end
 
     def kasket_key_for(attribute_value_pairs)
