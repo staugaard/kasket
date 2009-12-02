@@ -7,7 +7,7 @@ class FindOneTest < ActiveSupport::TestCase
 
   should "cache find(id) calls" do
     post = Post.first
-    assert_nil(Rails.cache.read(post.kasket_key))
+    Rails.cache.write(post.kasket_key, nil)
     assert_equal(post, Post.find(post.id))
     assert(Rails.cache.read(post.kasket_key))
     Post.connection.expects(:select_all).never

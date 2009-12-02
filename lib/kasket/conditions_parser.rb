@@ -1,53 +1,31 @@
 module Kasket
   class ConditionsParser
+    # Examples:
+    # SELECT * FROM `users` WHERE (`users`.`id` = 2) 
+    # SELECT * FROM `users` WHERE (`users`.`id` = 2) LIMIT 1
+    # 'SELECT * FROM \'posts\' WHERE (\'posts\'.\'id\' = 574019247) '
+    TABLE_PATTERN       = /(?:`|")\w+(?:`|")/
+    CONDITIONS_PATTERN  = /where \((.*)\)/i
+    LIMIT_PATTERN       = /limit (1)/i
+    
+    SUPPORTED_QUERY_PATTERN = /^select \* from #{TABLE_PATTERN} #{CONDITIONS_PATTERN}(| #{LIMIT_PATTERN})\s*$/i 
+   # SUPPORTED_QUERY_PATTERN = /^select \* from '\w+' #{CONDITIONS_PATTERN}(| #{LIMIT_PATTERN})\s*$/i 
+    
     def initialize(model_class)
       @model_class = model_class
     end
 
-    def attribute_value_pairs(options)
-      #pulls out the conditions from each hash
-      condition_fragments = [options[:conditions]]
-
-      #add the scope to the mix
-      if scope = @model_class.send(:scope, :find)
-        condition_fragments << scope[:conditions]
+    def attribute_value_pairs(sql)
+      return unless support?(sql)
+      
+      conditions = extract_conditions(sql)
+      if attributes = attributes_for_conditions(conditions)
+        attributes.keys.sort.map { |attribute| [attribute.to_sym, attributes[attribute]] }
       end
-
-      #add the type if we are on STI
-      condition_fragments << {:type => @model_class.name} if @model_class.finder_needs_type_condition?
-
-      condition_fragments.compact!
-
-      #parses each conditions fragment but bails if one of the did not parse
-      attributes_fragments = condition_fragments.map do |condition_fragment|
-        attributes_fragment = attributes_for_conditions(condition_fragment)
-        return nil unless attributes_fragment
-        attributes_fragment
-      end
-
-      #merges the hashes but bails if there is an overlap
-      attributes = attributes_fragments.inject({}) do |memo, attributes_fragment|
-        attributes_fragment.each do |attribute, value|
-          return nil if memo.has_key?(attribute)
-          memo[attribute] = value
-        end
-        memo
-      end
-
-      attributes.keys.sort.map { |attribute| [attribute.to_sym, attributes[attribute]] }
     end
-
+  
     def attributes_for_conditions(conditions)
-      pairs = case conditions
-        when Hash
-          return conditions.stringify_keys
-        when String
-          parse_indices_from_condition(conditions)
-        when Array
-          parse_indices_from_condition(*conditions)
-        when NilClass
-          []
-      end
+      pairs = parse_indices_from_condition(conditions)
 
       return nil unless pairs
 
@@ -57,7 +35,23 @@ module Kasket
         memo
       end
     end
-
+    
+    def extract_conditions(sql)
+      sql =~ CONDITIONS_PATTERN
+      $1
+    end
+    
+    def extract_options(sql)
+      sql =~ LIMIT_PATTERN
+      { :limit => $1 }
+    end
+    
+    def support?(sql)
+      (sql =~ SUPPORTED_QUERY_PATTERN).present?
+    end
+    
+    # SELECT * FROM `subscriptions` WHERE (`subscriptions`.account_id = 2) LIMIT 1
+    
     AND = /\s+AND\s+/i
     TABLE_AND_COLUMN = /(?:(?:`|")?(\w+)(?:`|")?\.)?(?:`|")?(\w+)(?:`|")?/ # Matches: `users`.id, `users`.`id`, users.id, id
     VALUE = /'?(\d+|\?|(?:(?:[^']|'')*))'?/                     # Matches: 123, ?, '123', '12''3'
@@ -68,7 +62,7 @@ module Kasket
       conditions.split(AND).inject([]) do |indices, condition|
         matched, table_name, column_name, sql_value = *(KEY_EQ_VALUE.match(condition))
         if matched
-          value = sql_value == '?' ? values.shift : @model_class.columns_hash[column_name].type_cast(sql_value)
+          value = sql_value == '?' ? values.shift : sql_value #@model_class.columns_hash[column_name].type_cast(sql_value)
           indices << [column_name, value]
         else
           return nil

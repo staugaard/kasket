@@ -31,7 +31,7 @@ class ActiveSupport::TestCase
     end
   end
 
-  self.use_transactional_fixtures = true
+  self.use_transactional_fixtures = false
 
   self.use_instantiated_fixtures  = false
 end

@@ -1,7 +1,7 @@
 test:
-  adapter: mysql
+  adapter: sqlite3
   encoding: utf8
   database: kasket_test
   username: root
   password:
-  socket: /tmp/mysql.sock
+ # socket: /tmp/mysql.sock

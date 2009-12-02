@@ -6,6 +6,7 @@ require 'kasket/active_record_patches'
 require 'kasket/configuration_mixin'
 require 'kasket/reload_association_mixin'
 require 'kasket/cache'
+require 'kasket/query'
 
 module Kasket
   CONFIGURATION = {:max_collection_size => 100}
