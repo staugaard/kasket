@@ -3,11 +3,13 @@ require 'active_record'
 require 'active_support'
 
 require 'kasket/active_record_patches'
-require 'kasket/configuration_mixin'
-require 'kasket/reload_association_mixin'
-require 'kasket/cache'
 
 module Kasket
+  autoload :Cache, 'kasket/cache'
+  autoload :ConfigurationMixin, 'kasket/configuration_mixin'
+  autoload :ReloadAssociationMixin, 'kasket/reload_association_mixin'
+  autoload :RackMiddleware, 'kasket/rack_middleware'
+
   CONFIGURATION = {:max_collection_size => 100}
 
   module_function
@@ -24,13 +26,20 @@ module Kasket
     ActiveRecord::Associations::BelongsToPolymorphicAssociation.send(:include, Kasket::ReloadAssociationMixin)
     ActiveRecord::Associations::HasOneThroughAssociation.send(:include, Kasket::ReloadAssociationMixin)
 
-    #sets up local cache clearing after each request
+    #sets up local cache clearing on rack
     begin
-      ApplicationController.after_filter do
+      ActionController::Dispatcher.middleware.use(Kasket::RackMiddleware)
+    rescue NameError => e
+      puts('WARNING: The kasket rack middleware is not in your rack stack')
+    end
+
+    #sets up local cache clearing before each request.
+    #this is done to make it work for non rack rails and for functional tests
+    begin
+      ApplicationController.before_filter do
         Kasket.cache.clear_local
       end
     rescue NameError => e
-
     end
 
     #sets up local cache clearing after each test case
@@ -46,4 +55,3 @@ module Kasket
     end
   end
 end
-
