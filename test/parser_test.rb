@@ -1,4 +1,5 @@
 require 'helper'
+require 'kasket/conditions_parser'
 
 class ParserTest < ActiveSupport::TestCase
 

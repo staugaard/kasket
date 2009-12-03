@@ -16,19 +16,32 @@ module Kasket
       @use_kasket = old_value
     end
     
+    def use_kasket?
+      @use_kasket != false
+    end
+    
     def find_by_sql_with_kasket(sql)
       query = Query.new(sql, self)
-      if query.records.present?
-        query.records
-      else
-        records = find_by_sql_without_kasket(sql)
-        query.records = records
-        records
+      load_records(query) || cache_records(query, find_by_sql_without_kasket(sql))
+    end
+    
+    protected
+    
+    def load_records(query)
+      key = query.collection_key
+      if key && records = Kasket.cache.read(key)
+        Array(records)
       end
     end
     
-    def use_kasket?
-      @use_kasket != false
+    def cache_records(query, records)
+      if records.size == 1
+        Kasket.cache.write(query.collection_key, records[0])
+      elsif records.size <= Kasket::CONFIGURATION[:max_collection_size]
+        records.each { |record| record.store_in_kasket if record }
+        Kasket.cache.write(query.collection_key, records.map(&:kasket_key))
+      end
+      records
     end
              
   end

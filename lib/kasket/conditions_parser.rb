@@ -9,7 +9,6 @@ module Kasket
     LIMIT_PATTERN       = /limit (1)/i
     
     SUPPORTED_QUERY_PATTERN = /^select \* from #{TABLE_PATTERN} #{CONDITIONS_PATTERN}(| #{LIMIT_PATTERN})\s*$/i 
-   # SUPPORTED_QUERY_PATTERN = /^select \* from '\w+' #{CONDITIONS_PATTERN}(| #{LIMIT_PATTERN})\s*$/i 
     
     def initialize(model_class)
       @model_class = model_class
@@ -50,7 +49,7 @@ module Kasket
       (sql =~ SUPPORTED_QUERY_PATTERN).present?
     end
     
-    # SELECT * FROM `subscriptions` WHERE (`subscriptions`.account_id = 2) LIMIT 1
+    protected
     
     AND = /\s+AND\s+/i
     TABLE_AND_COLUMN = /(?:(?:`|")?(\w+)(?:`|")?\.)?(?:`|")?(\w+)(?:`|")?/ # Matches: `users`.id, `users`.`id`, users.id, id
