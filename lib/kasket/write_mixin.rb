@@ -12,11 +12,6 @@ module Kasket
         remove_from_kasket(args[0])
         update_counters_without_kasket_clearing(*args)
       end
-      
-      def find_by_sql_with_kasket(sql)
-        sql = Kasket::Query.new(sql, self)
-        find_by_sql_without_kasket(sql)
-      end
     end
 
     module InstanceMethods
@@ -79,7 +74,6 @@ module Kasket
       
       class << model_class
         alias_method_chain :update_counters, :kasket_clearing
-        alias_method_chain :find_by_sql, :kasket
       end
     end
   end

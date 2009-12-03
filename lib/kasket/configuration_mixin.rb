@@ -5,18 +5,6 @@ module Kasket
   autoload :WriteMixin, 'kasket/write_mixin'
   autoload :DirtyMixin, 'kasket/dirty_mixin'
 
-  class Identity < String
-    
-    def initialize(key)
-      super(key)
-    end
-    
-    def collection_key
-      self
-    end
-    
-  end
-
   module ConfigurationMixin
     
     def without_kasket(&block)
@@ -36,7 +24,7 @@ module Kasket
     end
 
     def kasket_key_for(attribute_value_pairs)
-      Identity.new(kasket_key_prefix + attribute_value_pairs.map {|attribute, value| attribute.to_s + '=' + value.to_s}.join('/'))
+      kasket_key_prefix + attribute_value_pairs.map {|attribute, value| attribute.to_s + '=' + value.to_s}.join('/')
     end
 
     def kasket_key_for_id(id)
@@ -68,7 +56,7 @@ module Kasket
 
       include WriteMixin unless instance_methods.include?('store_in_kasket')
       extend DirtyMixin unless methods.include?('kasket_dirty_methods')
-      connection.extend(QueryCache)
+      extend ReadMixin unless methods.include?('find_by_sql_with_kasket')
     end
   end
 end

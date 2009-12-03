@@ -1,7 +1,7 @@
 module Kasket
   autoload :Parser, 'kasket/query/parser'
   
-  class Query < String
+  class Query
 
     module CacheKey
         
@@ -37,7 +37,6 @@ module Kasket
     def initialize(sql, model)
       @sql   = sql
       @model = model
-      super(sql)
     end
     
     def limit
