@@ -19,6 +19,10 @@ module Kasket
       @use_kasket != false
     end
     
+    def parser
+      @parser ||= Kasket::Parser.new(self)
+    end
+    
     def kasket_key_prefix
       @kasket_key_prefix ||= "kasket/#{table_name}/version=#{column_names.join.sum}/"
     end

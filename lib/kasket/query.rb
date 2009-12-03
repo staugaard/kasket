@@ -51,7 +51,7 @@ module Kasket
     protected
     
     def parser
-      @parser ||= Kasket::Parser.new(@model)
+      @model.parser
     end
     
   end
