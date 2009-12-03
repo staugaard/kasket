@@ -2,7 +2,6 @@ module Kasket
   autoload :Parser, 'kasket/query/parser'
   
   class Query
-
     module CacheKey
         
       def collection_key

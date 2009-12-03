@@ -5,7 +5,7 @@ class ParserTest < ActiveSupport::TestCase
 
   context "Parsing" do
     setup do
-      @parser = Kasket::Parser.new(ActiveRecord::Base) 
+      @parser = Kasket::Parser.new(Post) 
     end
 
     should "extract conditions" do
@@ -20,6 +20,7 @@ class ParserTest < ActiveSupport::TestCase
     
     should "support differently formatted queries" do
       assert @parser.support?('SELECT * FROM "apples" WHERE (color = red AND size = big)')
+      
      # assert @parser.support?('SELECT * FROM apples WHERE color = red AND size = big LIMIT 1')
      # assert @parser.support?('SELECT * FROM apples WHERE id IN(1,2,3,4)')
     end

@@ -10,7 +10,7 @@ module Kasket
         models = get_multi(result)
         result = result.map { |key| models[key]}
       end
- 
+
       @local_cache[args[0]] = result if result
       result
     end
@@ -36,10 +36,12 @@ module Kasket
       map
     end
  
-    def write(*args)
-      @local_cache[args[0]] = args[1]
- 
-      Rails.cache.write(*args)
+    def write(key, value)
+      if storable?(value)
+        @local_cache[key] = value
+        Rails.cache.write(key, value)
+      end
+      value
     end
  
     def delete(*args)
@@ -59,6 +61,16 @@ module Kasket
  
     def clear_local
       @local_cache = {}
+    end
+    
+    def local
+      @local_cache
+    end
+    
+    protected
+    
+    def storable?(value)
+      !value.is_a?(Array) || value.size <= Kasket::CONFIGURATION[:max_collection_size]
     end
  
   end
