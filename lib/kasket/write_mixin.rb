@@ -28,7 +28,7 @@ module Kasket
         attribute_sets = [attributes.symbolize_keys]
 
         if changed?
-          old_attributes = Hash[changes.map {|attribute, values| [attribute, values[0]]}].symbolize_keys
+          old_attributes = Hash[*changes.map {|attribute, values| [attribute, values[0]]}.flatten].symbolize_keys
           attribute_sets << old_attributes.reverse_merge(attribute_sets[0])
         end
 

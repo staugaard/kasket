@@ -54,14 +54,14 @@ module Kasket
       limit = (options[:limit] || (scope(:find) || {})[:limit])
 
       if limit.nil? && attribute_value_pairs && has_kasket_index_on?(attribute_value_pairs.map(&:first))
-        id_to_key_map = Hash[ids.uniq.map { |id| [id, kasket_key_for_id(id)] }]
+        id_to_key_map = Hash[*ids.uniq.map { |id| [id, kasket_key_for_id(id)] }.flatten]
         cached_record_map = Kasket.cache.get_multi(id_to_key_map.values)
 
-        missing_keys = Hash[cached_record_map.select { |key, record| record.nil? }].keys
+        missing_keys = cached_record_map.select { |key, record| record.nil? }.map(&:first)
 
         return cached_record_map.values if missing_keys.empty?
 
-        missing_ids = Hash[id_to_key_map.invert.select { |key, id| missing_keys.include?(key) }].values
+        missing_ids = id_to_key_map.invert.select { |key, id| missing_keys.include?(key) }.map(&:last)
 
         db_records = without_kasket do
           find_some_without_kasket(missing_ids, options)
