@@ -6,12 +6,9 @@ module Kasket
     # 'SELECT * FROM \'posts\' WHERE (\'posts\'.\'id\' = 574019247) '
     # FIXME: Use table from model name
     # FIXME use ? for limit
-    TABLE_PATTERN       = /(?:`|")\w+(?:`|")/
     CONDITIONS_PATTERN  = /where \((.*)\)/i
     LIMIT_PATTERN       = /limit (1)/i
-    
-    SUPPORTED_QUERY_PATTERN = /^select \* from #{TABLE_PATTERN} #{CONDITIONS_PATTERN}(| #{LIMIT_PATTERN})\s*$/i 
-    
+        
     def initialize(model_class)
       @model_class = model_class
     end
@@ -48,10 +45,14 @@ module Kasket
     end
     
     def support?(sql)
-      (sql =~ SUPPORTED_QUERY_PATTERN).present?
+      (sql =~ supported_query_pattern).present?
     end
     
     protected
+    
+    def supported_query_pattern
+      @supported_query_pattern ||= /^select \* from (?:`|")#{@model_class.table_name}(?:`|") #{CONDITIONS_PATTERN}(| #{LIMIT_PATTERN})\s*$/i 
+    end
     
     AND = /\s+AND\s+/i
     TABLE_AND_COLUMN = /(?:(?:`|")?(\w+)(?:`|")?\.)?(?:`|")?(\w+)(?:`|")?/ # Matches: `users`.id, `users`.`id`, users.id, id
