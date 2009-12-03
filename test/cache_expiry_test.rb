@@ -10,7 +10,7 @@ class CacheExpiryTest < ActiveSupport::TestCase
   context "a cached object" do
     setup do
       post = Post.first
-      @post = Post.find(post.id)
+      Post.cache { @post = Post.find(post.id) }
       assert(Rails.cache.read(@post.kasket_key))
     end
 

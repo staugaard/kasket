@@ -1,11 +1,11 @@
 require 'helper'
-require 'kasket/conditions_parser'
+require 'kasket/query/parser'
 
 class ParserTest < ActiveSupport::TestCase
 
   context "Parsing" do
     setup do
-      @parser = Kasket::ConditionsParser.new(ActiveRecord::Base) 
+      @parser = Kasket::Parser.new(ActiveRecord::Base) 
     end
 
     should "extract conditions" do

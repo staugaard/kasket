@@ -1,5 +1,6 @@
-module Kasket
+module Kasket  
   module WriteMixin
+    
     module ClassMethods
       def remove_from_kasket(ids)
         Array(ids).each do |id|
@@ -10,6 +11,11 @@ module Kasket
       def update_counters_with_kasket_clearing(*args)
         remove_from_kasket(args[0])
         update_counters_without_kasket_clearing(*args)
+      end
+      
+      def find_by_sql_with_kasket(sql)
+        sql = Kasket::Query.new(sql, self)
+        find_by_sql_without_kasket(sql)
       end
     end
 
@@ -70,9 +76,10 @@ module Kasket
       model_class.after_destroy :clear_kasket_indices
 
       model_class.alias_method_chain :reload, :kasket_clearing
-
+      
       class << model_class
         alias_method_chain :update_counters, :kasket_clearing
+        alias_method_chain :find_by_sql, :kasket
       end
     end
   end

@@ -8,8 +8,9 @@ class DirtyTest < ActiveSupport::TestCase
 
   should "clear the indices when a dirty method is called" do
     post = Post.first
-
-    pots = Post.find(post.id)
+    
+    
+    Post.cache { pots = Post.find(post.id) }
     assert(Rails.cache.read(post.kasket_key))
 
     post.make_dirty!

@@ -1,82 +1,77 @@
 module Kasket
   class Cache
-    def initialize
-      clear_local
-    end
-
-    def read(*args)
-      result = @local_cache[args[0]] || Rails.cache.read(*args)
-      if result.is_a?(CachedModel)
-        result = result.instanciate_model
-      elsif result.is_a?(Array)
-        models = get_multi(result)
-        result = result.map { |key| models[key]}
+    module LocalCache
+      
+      def initialize
+        clear_local
       end
-
-      @local_cache[args[0]] = result if result
-      result
-    end
-
-    def get_multi(keys)
-      map = Hash[keys.zip(keys.map { |key| @local_cache[key] })]
-      missing_keys = map.select { |key, value| value.nil? }.map(&:first)
-
-      unless missing_keys.empty?
-        if Rails.cache.respond_to?(:read_multi)
-          missing_map = Rails.cache.read_multi(missing_keys)
-          missing_map.each do |key, value|
-            value = value.instanciate_model if value.is_a?(CachedModel)
-            missing_map[key] = @local_cache[key] = value
-          end
-          map.merge!(missing_map)
-        else
-          missing_keys.each do |key|
-            map[key] = read(key)
-          end
+      
+      def read(*args)
+        @local_cache[args[0]] ||= super 
+      end
+      
+      def write(*args)
+        @local_cache[args[0]] = args[1]
+        super
+      end
+      
+      def delete(*args)
+        @local_cache.delete(args[0])
+        super
+      end
+      
+      def delete_local(*keys)
+        keys.each do |key|
+          @local_cache.delete(key)
         end
       end
-
-      map
-    end
-
-    def write(*args)
-      @local_cache[args[0]] = args[1]
-
-      if args[1].is_a?(ActiveRecord::Base)
-        args[1] = CachedModel.new(args[1])
+      
+      def delete_matched_local(matcher)
+        @local_cache.delete_if { |k,v| k =~ matcher }
       end
-
-      Rails.cache.write(*args)
-    end
-
-    def delete(*args)
-      @local_cache.delete(args[0])
-      Rails.cache.delete(*args)
-    end
-
-    def delete_local(*keys)
-      keys.each do |key|
-        @local_cache.delete(key)
+      
+      def clear_local
+        @local_cache = {}
       end
+      
     end
 
-    def delete_matched_local(matcher)
-      @local_cache.delete_if { |k,v| k =~ matcher }
+    def initialize
+      extend LocalCache
     end
 
-    def clear_local
-      @local_cache = {}
+    def [](key)
+      read(key)
     end
-
-    class CachedModel
-      def initialize(model)
-        @name = model.class.name
-        @attributes = model.instance_variable_get(:@attributes)
+    
+    def []=(key, records)
+      write(key, records)
+    end
+    
+    def has_key?(key)
+      read(key).present?
+    end
+    
+    def delete(key)
+      Rails.cache.delete(key.collection_key) if kasket?(key)
+    end
+        
+    def read(key)
+      Rails.cache.read(key.collection_key) if kasket?(key)
+    end
+    
+    def write(key, value)
+      if kasket?(key) && value.size <= Kasket::CONFIGURATION[:max_collection_size]
+        Rails.cache.write(key.collection_key, value)
       end
-
-      def instanciate_model
-        @name.constantize.send(:instantiate, @attributes)
-      end
+      value
     end
+    
+    protected
+
+    def kasket?(key)
+      key.respond_to?(:collection_key) && key.collection_key.present?
+    end
+
   end
 end

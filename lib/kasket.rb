@@ -10,7 +10,8 @@ module Kasket
   autoload :ReloadAssociationMixin, 'kasket/reload_association_mixin'
   autoload :RackMiddleware, 'kasket/rack_middleware'
   autoload :Query, 'kasket/query'
-
+  autoload :QueryCache, 'kasket/query_cache'
+  
   CONFIGURATION = {:max_collection_size => 100}
 
   module_function
@@ -26,13 +27,6 @@ module Kasket
     ActiveRecord::Associations::BelongsToAssociation.send(:include, Kasket::ReloadAssociationMixin)
     ActiveRecord::Associations::BelongsToPolymorphicAssociation.send(:include, Kasket::ReloadAssociationMixin)
     ActiveRecord::Associations::HasOneThroughAssociation.send(:include, Kasket::ReloadAssociationMixin)
-
-    #sets up local cache clearing on rack
-    begin
-      ActionController::Dispatcher.middleware.use(Kasket::RackMiddleware)
-    rescue NameError => e
-      puts('WARNING: The kasket rack middleware is not in your rack stack')
-    end
 
     #sets up local cache clearing before each request.
     #this is done to make it work for non rack rails and for functional tests

@@ -20,19 +20,6 @@ class QueryTest < ActiveSupport::TestCase
     end
   
     context "caching" do
-      
-      should "provide records" do
-        assert_equal [], @query.records
-        
-        Kasket.cache.write(@query.collection_key, 'hello')
-        assert_equal [ 'hello' ], @query.records
-      end
-      
-      should "write records to the cache" do
-        post = Post.new(:title => 'hello')
-        @query.records = [ post ]
-        assert_equal post.attributes, @query.records.first.attributes
-      end
 
       should "correctly determine if its cacheable" do
         assert_equal true, @query.cachable?
@@ -55,7 +42,5 @@ class QueryTest < ActiveSupport::TestCase
     end
   
   end
-  
-
 
 end
