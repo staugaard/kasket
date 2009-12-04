@@ -19,8 +19,8 @@ module Kasket
       @use_kasket != false
     end
     
-    def parser
-      @parser ||= Kasket::Parser.new(self)
+    def kasket_parser
+      @kasket_parser ||= Kasket::Parser.new(self)
     end
     
     def kasket_key_prefix

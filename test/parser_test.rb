@@ -9,8 +9,7 @@ class ParserTest < ActiveSupport::TestCase
     end
 
     should "extract conditions" do
-      assert_equal [[:color, "red"], [:size, "big"]], @parser.attribute_value_pairs('SELECT * FROM `posts` WHERE (`color` = red and `size` = big)')
-     # assert_equal [ [:id, [1,2,3,4]] ], @parser.attribute_value_pairs('SELECT * FROM `posts` WHERE (`id` IN (1,2,3,4))')
+      assert_equal [[:color, "red"], [:size, "big"]], @parser.attribute_value_pairs('SELECT * FROM `posts` WHERE (`posts`.`color` = red AND `posts`.`size` = big)')
     end
     
     should "only support queries against its model's table" do
@@ -18,15 +17,13 @@ class ParserTest < ActiveSupport::TestCase
     end
     
     should "support cachable queries" do
-      assert @parser.support?('SELECT * FROM `posts` WHERE (`users`.`id` = 2) ')
-      assert @parser.support?('SELECT * FROM `posts` WHERE (`users`.`id` = 2) LIMIT 1')
+      assert @parser.support?('SELECT * FROM `posts` WHERE (`posts`.`id` = 2) ')
+      assert @parser.support?('SELECT * FROM `posts` WHERE (`posts`.`id` = 2) LIMIT 1')
+      assert @parser.support?('SELECT * FROM `posts` WHERE (`posts`.`id` IN (1,2,3,4))')
     end
     
-    should "support differently formatted queries" do
+    should "support vaguely formatted queries" do
       assert @parser.support?('SELECT * FROM "posts" WHERE (color = red AND size = big)')
-      
-     # assert @parser.support?('SELECT * FROM posts WHERE color = red AND size = big LIMIT 1')
-     # assert @parser.support?('SELECT * FROM posts WHERE id IN(1,2,3,4)')
     end
     
     context "extract options" do
@@ -36,7 +33,7 @@ class ParserTest < ActiveSupport::TestCase
         assert_equal nil, @parser.extract_options(sql)[:limit]
         
         sql << ' LIMIT 1'
-        assert_equal '1', @parser.extract_options(sql)[:limit]
+        assert_equal 1, @parser.extract_options(sql)[:limit]
       end
       
     end

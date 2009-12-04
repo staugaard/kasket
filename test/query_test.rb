@@ -5,7 +5,7 @@ class QueryTest < ActiveSupport::TestCase
 
   context "converting a query to cache keys" do
     setup do
-      @sql   = "SELECT * FROM `apples` WHERE (color = red AND size = big)"
+      @sql   = "SELECT * FROM `posts` WHERE (color = red AND size = big)"
       @query = Kasket::Query.new(@sql, Post)
     end
 
@@ -20,20 +20,27 @@ class QueryTest < ActiveSupport::TestCase
     end
   
     context "caching" do
+      setup do
+        @unindexable_query = Kasket::Query.new('SELECT * FROM `posts` WHERE (title is not null)', Post)
+      end
 
       should "correctly determine if its cacheable" do
         assert_equal true, @query.cachable?
+        assert_equal false, @unindexable_query.cachable?
       end
 
       should "locate indexed conditions" do
         assert_equal true, @query.indexes?
+        assert_equal false, @unindexable_query.indexes?
       end
       
       should "provide index candidates" do
         assert_equal [:color, :size], @query.index_candidates
+        assert_equal [], @unindexable_query.index_candidates
       end
 
-      should "generate a collection keyt" do
+      should "generate a collection key" do
+        assert_equal nil, @unindexable_query.collection_key
         assert_equal "kasket/posts/version=3558/color=red/size=big", @query.collection_key  
         query_with_limit = Kasket::Query.new(@sql += ' LIMIT 1', Post)
         assert_equal "kasket/posts/version=3558/color=red/size=big/first", query_with_limit.collection_key      

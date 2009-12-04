@@ -6,7 +6,7 @@ module Kasket
         
       def collection_key
         if cachable?
-          collection_key = @model.kasket_key_for(attribute_value_pairs || '')
+          collection_key = @model.kasket_key_for(attribute_value_pairs)
           collection_key << '/first' if limit == 1
           collection_key
         end
@@ -39,18 +39,17 @@ module Kasket
     end
     
     def limit
-      limit = parser.extract_options(@sql)[:limit]
-      limit.to_i if limit
+      parser.extract_options(@sql)[:limit]
     end
     
     def attribute_value_pairs
-      parser.attribute_value_pairs(@sql)
+      parser.attribute_value_pairs(@sql) || '' # FIXME
     end
     
     protected
     
     def parser
-      @model.parser
+      @model.kasket_parser
     end
     
   end

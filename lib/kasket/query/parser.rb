@@ -4,10 +4,8 @@ module Kasket
     # SELECT * FROM `users` WHERE (`users`.`id` = 2) 
     # SELECT * FROM `users` WHERE (`users`.`id` = 2) LIMIT 1
     # 'SELECT * FROM \'posts\' WHERE (\'posts\'.\'id\' = 574019247) '
-    # FIXME: Use table from model name
-    # FIXME use ? for limit
     CONDITIONS_PATTERN  = /where \((.*)\)/i
-    LIMIT_PATTERN       = /limit (1)/i
+    LIMIT_PATTERN       = /limit 1/i
         
     def initialize(model_class)
       @model_class = model_class
@@ -40,8 +38,8 @@ module Kasket
     end
     
     def extract_options(sql)
-      sql =~ LIMIT_PATTERN
-      { :limit => $1 }
+      limit = (sql =~ LIMIT_PATTERN) ? 1 : nil
+      { :limit => limit }
     end
     
     def support?(sql)
@@ -58,7 +56,7 @@ module Kasket
     TABLE_AND_COLUMN = /(?:(?:`|")?(\w+)(?:`|")?\.)?(?:`|")?(\w+)(?:`|")?/ # Matches: `users`.id, `users`.`id`, users.id, id
     VALUE = /'?(\d+|\?|(?:(?:[^']|'')*))'?/                     # Matches: 123, ?, '123', '12''3'
     KEY_EQ_VALUE = /^[\(\s]*#{TABLE_AND_COLUMN}\s+=\s+#{VALUE}[\)\s]*$/ # Matches: KEY = VALUE, (KEY = VALUE), ()(KEY = VALUE))
-
+    
     def parse_indices_from_condition(conditions = '', *values)
       values = values.dup
       conditions.split(AND).inject([]) do |indices, condition|
@@ -71,5 +69,6 @@ module Kasket
         end
       end
     end
+    
   end
 end
