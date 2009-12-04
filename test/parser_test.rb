@@ -1,4 +1,4 @@
-require 'helper'
+require File.dirname(__FILE__) + '/helper'
 require 'kasket/query/parser'
 
 class ParserTest < ActiveSupport::TestCase

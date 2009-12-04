@@ -1,4 +1,4 @@
-require 'helper'
+require File.dirname(__FILE__) + '/helper'
 
 class QueryTest < ActiveSupport::TestCase
   Post.has_kasket_on :color

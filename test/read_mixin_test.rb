@@ -1,6 +1,6 @@
-require 'helper'
+require File.dirname(__FILE__) + '/helper'
 
-class QueryTest < ActiveSupport::TestCase
+class ReadMixinTest < ActiveSupport::TestCase
   Post.has_kasket
  
   context "find by sql with kasket" do

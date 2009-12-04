@@ -33,7 +33,6 @@ class CacheExpiryTest < ActiveSupport::TestCase
     end
 
     should "be removed from cache when updated" do
-      
       @post.title = "new title"
       @post.save
       assert_nil(Rails.cache.read(@post.kasket_key))
