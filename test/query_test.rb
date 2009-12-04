@@ -1,10 +1,10 @@
 require File.dirname(__FILE__) + '/helper'
 
 class QueryTest < ActiveSupport::TestCase
-  Post.has_kasket_on :color
 
   context "converting a query to cache keys" do
     setup do
+      Post.has_kasket_on :color
       @sql   = "SELECT * FROM `posts` WHERE (color = red AND size = big)"
       @query = Kasket::Query.new(@sql, Post)
     end
