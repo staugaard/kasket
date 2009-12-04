@@ -8,7 +8,7 @@ module Kasket
       result = @local_cache[args[0]] || Rails.cache.read(*args)
       if result.is_a?(Array) && result.first.is_a?(String)
         models = get_multi(result)
-        result = result.map { |key| models[key]}
+        result = result.map { |key| models[key] }
       end
 
       @local_cache[args[0]] = result if result
@@ -38,8 +38,8 @@ module Kasket
  
     def write(key, value)
       if storable?(value)
-        @local_cache[key] = value
-        Rails.cache.write(key, value)
+        @local_cache[key] = value.duplicable? ? value.dup : value
+        Rails.cache.write(key, value.duplicable? ? value.dup : value) # Fix due to Rails.cache freezing values in 2.3.4
       end
       value
     end

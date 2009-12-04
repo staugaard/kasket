@@ -9,8 +9,9 @@ class CacheExpiryTest < ActiveSupport::TestCase
 
   context "a cached object" do
     setup do
-      post = Post.first
-      Post.cache { @post = Post.find(post.id) }
+      post = Post.first      
+      @post = Post.find(post.id)
+      
       assert(Rails.cache.read(@post.kasket_key))
     end
 
@@ -18,7 +19,7 @@ class CacheExpiryTest < ActiveSupport::TestCase
       @post.destroy
       assert_nil(Rails.cache.read(@post.kasket_key))
     end
-
+    
     should "clear all indices for instance when deleted" do
       Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "id=#{@post.id}")
       Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "id=#{@post.id}/first")
@@ -27,16 +28,17 @@ class CacheExpiryTest < ActiveSupport::TestCase
       Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "blog_id=#{@post.blog_id}")
       Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "blog_id=#{@post.blog_id}/first")
       Kasket.cache.expects(:delete).never
-
+    
       @post.destroy
     end
 
     should "be removed from cache when updated" do
+      
       @post.title = "new title"
       @post.save
       assert_nil(Rails.cache.read(@post.kasket_key))
     end
-
+    
     should "clear all indices for instance when updated" do
       Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "id=#{@post.id}")
       Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "id=#{@post.id}/first")
@@ -47,9 +49,10 @@ class CacheExpiryTest < ActiveSupport::TestCase
       Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "blog_id=#{@post.blog_id}")
       Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "blog_id=#{@post.blog_id}/first")
       Kasket.cache.expects(:delete).never
-
+    
       @post.title = "new title"
       @post.save
     end
+    
   end
 end

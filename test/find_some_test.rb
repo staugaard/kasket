@@ -17,7 +17,6 @@ class FindSomeTest < ActiveSupport::TestCase
   
     assert(Rails.cache.read(post1.kasket_key))
     assert(Rails.cache.read(post2.kasket_key))
-  
     Post.connection.expects(:select_all).never
     Post.find(post1.id, post2.id)
   end

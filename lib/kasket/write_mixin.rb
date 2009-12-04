@@ -21,7 +21,7 @@ module Kasket
 
       def store_in_kasket
         if !readonly? && kasket_key
-          Kasket.cache.write(kasket_key, self)
+          Kasket.cache.write(kasket_key, @attributes)
         end
       end
 

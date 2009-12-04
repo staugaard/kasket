@@ -23,6 +23,14 @@ class CacheTest < ActiveSupport::TestCase
         assert_equal [ 'value1', 'value2', 'value3'], @cache.read('collection_key') 
       end
       
+      should "not impact original object" do
+        record = { 'id' => 1, 'color' => 'red' }
+        @cache.write('key', record)
+        record['id'] = 2
+        
+        assert_not_equal record, @cache.read('key')
+      end
+      
     end
 
     context "writing" do
@@ -60,10 +68,6 @@ class CacheTest < ActiveSupport::TestCase
       
       assert_equal nil, @cache.local['key']
       assert_equal nil, @cache.read('key')
-    end
- 
-    def delete_matched_local(matcher)
-      @local_cache.delete_if { |k,v| k =~ matcher }
     end
  
     should "delete matched local" do
