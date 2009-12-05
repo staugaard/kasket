@@ -6,7 +6,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "kasket"
     gem.summary = %Q{A write back caching layer on active record}
-    gem.description = %Q{A rewrite of cache money}
+    gem.description = %Q{put's a cap on your queries}
     gem.email = "mick@staugaard.com"
     gem.homepage = "http://github.com/staugaard/kasket"
     gem.authors = ["Mick Staugaard", "Eric Chapweske"]
