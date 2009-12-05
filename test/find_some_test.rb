@@ -3,9 +3,6 @@ require File.dirname(__FILE__) + '/helper'
 class FindSomeTest < ActiveSupport::TestCase
   fixtures :blogs, :posts
 
-  Post.has_kasket
-  Post.has_kasket_on :blog_id
-
   should_eventually "cache find(id, id) calls" do
     post1 = Post.first
     post2 = Post.last

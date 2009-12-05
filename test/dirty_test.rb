@@ -3,9 +3,6 @@ require File.dirname(__FILE__) + '/helper'
 class DirtyTest < ActiveSupport::TestCase
   fixtures :blogs, :posts
 
-  Post.has_kasket
-  Post.kasket_dirty_methods :make_dirty!
-
   should "clear the indices when a dirty method is called" do
     post = Post.first
     

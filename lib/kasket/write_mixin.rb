@@ -36,13 +36,14 @@ module Kasket
         keys = []
         self.class.kasket_indices.each do |index|
           keys += attribute_sets.map do |attribute_set|
-            self.class.kasket_key_for(index.map { |attribute| [attribute, attribute_set[attribute]]})
+            key = self.class.kasket_key_for(index.map { |attribute| [attribute, attribute_set[attribute]]})
+            index.include?(:id) ? key : [key, key + '/first']
           end
         end
 
-        keys.uniq!
-        keys.map! {|key| [key, "#{key}/first"]}
         keys.flatten!
+        keys.uniq!
+        keys
       end
 
       def clear_kasket_indices

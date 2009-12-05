@@ -9,7 +9,7 @@ begin
     gem.description = %Q{A rewrite of cache money}
     gem.email = "mick@staugaard.com"
     gem.homepage = "http://github.com/staugaard/kasket"
-    gem.authors = ["Mick Staugaard"]
+    gem.authors = ["Mick Staugaard", "Eric Chapweske"]
     gem.add_dependency('activerecord', '>= 2.3.4')
     gem.add_dependency('activesupport', '>= 2.3.4')
     gem.add_development_dependency "thoughtbot-shoulda", ">= 0"

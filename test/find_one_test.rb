@@ -3,8 +3,6 @@ require File.dirname(__FILE__) + '/helper'
 class FindOneTest < ActiveSupport::TestCase
   fixtures :blogs, :posts
 
-  Post.has_kasket
-
   should "cache find(id) calls" do
     post = Post.first
     Rails.cache.write(post.kasket_key, nil)
@@ -12,6 +10,15 @@ class FindOneTest < ActiveSupport::TestCase
     assert(Rails.cache.read(post.kasket_key))
     Post.connection.expects(:select_all).never
     assert_equal(post, Post.find(post.id))
+  end
+
+  should "only cache on indexed attributes" do
+    Kasket.cache.expects(:read).twice
+    Post.find_by_id(1)
+    Post.find_by_id(1, :conditions => {:blog_id => 2})
+
+    Kasket.cache.expects(:read).never
+    Post.first :conditions => {:blog_id => 2}
   end
 
   should "not use cache when using the :select option" do

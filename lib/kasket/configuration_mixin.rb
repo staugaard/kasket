@@ -4,9 +4,10 @@ module Kasket
   autoload :ReadMixin, 'kasket/read_mixin'
   autoload :WriteMixin, 'kasket/write_mixin'
   autoload :DirtyMixin, 'kasket/dirty_mixin'
+  autoload :QueryParser, 'kasket/query_parser'
 
   module ConfigurationMixin
-    
+
     def without_kasket(&block)
       old_value = @use_kasket || true
       @use_kasket = false
@@ -14,21 +15,39 @@ module Kasket
     ensure
       @use_kasket = old_value
     end
-    
+
     def use_kasket?
       @use_kasket != false
     end
-    
+
     def kasket_parser
-      @kasket_parser ||= Kasket::Parser.new(self)
+      @kasket_parser ||= QueryParser.new(self)
     end
-    
+
     def kasket_key_prefix
       @kasket_key_prefix ||= "kasket/#{table_name}/version=#{column_names.join.sum}/"
     end
 
     def kasket_key_for(attribute_value_pairs)
-      kasket_key_prefix + attribute_value_pairs.map {|attribute, value| attribute.to_s + '=' + value.to_s}.join('/')
+      kasket_key_prefix + attribute_value_pairs.map do |attribute, value|
+        if (column = columns_hash[attribute.to_s]) && column.number?
+          attribute.to_s + '=' + convert_number_column_value(value.to_s)
+        else
+          attribute.to_s + '=' + connection.quote(value.to_s)
+        end
+      end.join('/')
+    end
+
+    def convert_number_column_value(value)
+      if value == false
+        0
+      elsif value == true
+        1
+      elsif value.is_a?(String) && value.blank?
+        nil
+      else
+        value
+      end
     end
 
     def kasket_key_for_id(id)
