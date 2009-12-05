@@ -1,6 +1,6 @@
-module Kasket  
+module Kasket
   module WriteMixin
-    
+
     module ClassMethods
       def remove_from_kasket(ids)
         Array(ids).each do |id|
@@ -72,7 +72,7 @@ module Kasket
       model_class.after_destroy :clear_kasket_indices
 
       model_class.alias_method_chain :reload, :kasket_clearing
-      
+
       class << model_class
         alias_method_chain :update_counters, :kasket_clearing
       end

@@ -10,7 +10,7 @@ module Kasket
   autoload :ReloadAssociationMixin, 'kasket/reload_association_mixin'
   autoload :RackMiddleware, 'kasket/rack_middleware'
   autoload :Query, 'kasket/query'
-  
+
   CONFIGURATION = {:max_collection_size => 100}
 
   module_function
@@ -35,7 +35,7 @@ module Kasket
       end
     rescue NameError => e
     end
-    
+
     #sets up local cache clearing on rack
     begin
       ActionController::Dispatcher.middleware.use(Kasket::RackMiddleware)
