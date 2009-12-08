@@ -34,13 +34,14 @@ module Kasket
         Kasket.cache.clear_local
       end
     rescue NameError => e
+      puts('WARNING: The kasket before filter did not register (this is OK in the test environment)')
     end
 
     #sets up local cache clearing on rack
     begin
       ActionController::Dispatcher.middleware.use(Kasket::RackMiddleware)
     rescue NameError => e
-      puts('WARNING: The kasket rack middleware is not in your rack stack')
+      puts('WARNING: The kasket rack middleware is not in your rack stack (this is OK in the test environment)')
     end
 
     #sets up local cache clearing after each test case
