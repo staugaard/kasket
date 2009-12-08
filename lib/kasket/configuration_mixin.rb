@@ -30,7 +30,9 @@ module Kasket
 
     def kasket_key_for(attribute_value_pairs)
       kasket_key_prefix + attribute_value_pairs.map do |attribute, value|
-        if (column = columns_hash[attribute.to_s]) && column.number?
+        if value.nil?
+          attribute.to_s + '='
+        elsif (column = columns_hash[attribute.to_s]) && column.number?
           attribute.to_s + '=' + convert_number_column_value(value.to_s)
         else
           attribute.to_s + '=' + connection.quote(value.to_s)
