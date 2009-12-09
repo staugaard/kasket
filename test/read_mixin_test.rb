@@ -15,19 +15,19 @@ class ReadMixinTest < ActiveSupport::TestCase
     end
 
     should "read results" do
-      Kasket.cache.write('kasket/posts/version=3558/id=1', @database_results.first)
+      Kasket.cache.write("kasket-#{Kasket::Version::STRING}/posts/version=3558/id=1", @database_results.first)
       assert_equal [ @records.first ], Post.find_by_sql('SELECT * FROM `posts` WHERE (id = 1)'), Kasket.cache.inspect
     end
 
     should "store results in kasket" do
       Post.find_by_sql('SELECT * FROM `posts` WHERE (id = 1)')
 
-      assert_equal @database_results.first, Kasket.cache.read('kasket/posts/version=3558/id=1'), Kasket.cache.inspect
+      assert_equal @database_results.first, Kasket.cache.read("kasket-#{Kasket::Version::STRING}/posts/version=3558/id=1"), Kasket.cache.inspect
     end
 
     context "modifying results" do
       setup do
-        Kasket.cache.write('kasket/posts/version=3558/id=1', @database_results.first)
+        Kasket.cache.write("kasket-#{Kasket::Version::STRING}/posts/version=3558/id=1", @database_results.first)
         @record = Post.find_by_sql('SELECT * FROM `posts` WHERE (id = 1)').first
         @record.instance_variable_get(:@attributes)['id'] = 3
       end

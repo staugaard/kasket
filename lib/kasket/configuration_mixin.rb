@@ -25,7 +25,7 @@ module Kasket
     end
 
     def kasket_key_prefix
-      @kasket_key_prefix ||= "kasket/#{table_name}/version=#{column_names.join.sum}/"
+      @kasket_key_prefix ||= "kasket-#{Kasket::Version::STRING}/#{table_name}/version=#{column_names.join.sum}/"
     end
 
     def kasket_key_for(attribute_value_pairs)

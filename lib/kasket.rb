@@ -13,6 +13,13 @@ module Kasket
 
   CONFIGURATION = {:max_collection_size => 100}
 
+  class Version
+    MAJOR = 0
+    MINOR = 6
+    PATCH = 4
+    STRING = "#{MAJOR}.#{MINOR}.#{PATCH}"
+  end
+
   module_function
 
   def cache

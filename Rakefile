@@ -1,10 +1,12 @@
 require 'rubygems'
 require 'rake'
+require 'lib/kasket'
 
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "kasket"
+    gem.version = Kasket::Version::STRING
     gem.summary = %Q{A write back caching layer on active record}
     gem.description = %Q{puts a cap on your queries}
     gem.email = "mick@staugaard.com"

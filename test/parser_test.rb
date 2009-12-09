@@ -75,7 +75,7 @@ class ParserTest < ActiveSupport::TestCase
 
     context "key generation" do
       should "include the table name and version" do
-        assert_match(/^kasket\/posts\/version=3558\//, @parser.parse('SELECT * FROM `posts` WHERE (id = 1)')[:key])
+        assert_match(/^kasket-#{Kasket::Version::STRING}\/posts\/version=3558\//, @parser.parse('SELECT * FROM `posts` WHERE (id = 1)')[:key])
       end
 
       should "include all indexed attributes" do
