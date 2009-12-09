@@ -8,6 +8,7 @@ module Kasket
     end
 
     def find_by_sql_with_kasket(sql)
+      sql = sanitize_sql(sql)
       query = kasket_parser.parse(sql) if use_kasket?
       if query && has_kasket_index_on?(query[:index])
         if value = Kasket.cache.read(query[:key])
