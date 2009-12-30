@@ -12,7 +12,7 @@ module Kasket
       query = kasket_parser.parse(sql) if use_kasket?
       if query && has_kasket_index_on?(query[:index])
         if value = Kasket.cache.read(query[:key])
-          Array.wrap(value).collect! { |record| instantiate(record.clone) }
+          Array.wrap(value).collect! { |record| instantiate(record.dup) }
         else
           store_in_kasket(query[:key], find_by_sql_without_kasket(sql))
         end
