@@ -5,9 +5,10 @@ module Kasket
     end
 
     def call(env)
+      Kasket.cache.enable_local = true
       @app.call(env)
     ensure
-      Kasket.cache.clear_local
+      Kasket.cache.enable_local = false
     end
   end
 end
