@@ -13,11 +13,11 @@ class FindOneTest < ActiveSupport::TestCase
   end
 
   should "only cache on indexed attributes" do
-    Kasket.cache.expects(:read).twice
+    Rails.cache.expects(:read).twice
     Post.find_by_id(1)
     Post.find_by_id(1, :conditions => {:blog_id => 2})
 
-    Kasket.cache.expects(:read).never
+    Rails.cache.expects(:read).never
     Post.first :conditions => {:blog_id => 2}
   end
 
@@ -31,10 +31,10 @@ class FindOneTest < ActiveSupport::TestCase
     Post.find(post.id)
     assert(Rails.cache.read(post.kasket_key))
 
-    Kasket.cache.expects(:read)
+    Rails.cache.expects(:read)
     Post.find(post.id, :select => nil)
 
-    Kasket.cache.expects(:read).never
+    Rails.cache.expects(:read).never
     Post.find(post.id, :select => 'title')
   end
 

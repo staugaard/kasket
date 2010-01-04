@@ -4,7 +4,7 @@ module Kasket
     module ClassMethods
       def remove_from_kasket(ids)
         Array(ids).each do |id|
-          Kasket.cache.delete(kasket_key_for_id(id))
+          Rails.cache.delete(kasket_key_for_id(id))
         end
       end
 
@@ -21,7 +21,7 @@ module Kasket
 
       def store_in_kasket
         if !readonly? && kasket_key
-          Kasket.cache.write(kasket_key, @attributes)
+          Rails.cache.write(kasket_key, @attributes.dup)
         end
       end
 
@@ -48,18 +48,12 @@ module Kasket
 
       def clear_kasket_indices
         kasket_keys.each do |key|
-          Kasket.cache.delete(key)
-        end
-      end
-
-      def clear_local_kasket_indices
-        kasket_keys.each do |key|
-          Kasket.cache.delete_local(key)
+          Rails.cache.delete(key)
         end
       end
 
       def reload_with_kasket_clearing(*args)
-        clear_local_kasket_indices
+        Kasket.clear_local
         reload_without_kasket_clearing(*args)
       end
     end

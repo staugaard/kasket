@@ -34,6 +34,11 @@ class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
   self.use_instantiated_fixtures  = false
+
+  setup :clear_cache
+  def clear_cache
+    Rails.cache.clear
+  end
 end
 
 ActiveSupport::TestCase.fixture_path = File.dirname(__FILE__) + "/fixtures/"
