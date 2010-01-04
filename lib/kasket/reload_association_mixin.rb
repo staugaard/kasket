@@ -1,12 +1,7 @@
 module Kasket
   module ReloadAssociationMixin
     def reload_with_kasket_clearing(*args)
-      if loaded?
-        Kasket.clear_local if include?(WriteMixin)
-      else
-        target_class = proxy_reflection.options[:polymorphic] ? association_class : proxy_reflection.klass
-        Kasket.cache.delete_matched_local(/^#{target_class.kasket_key_prefix}/) if target_class.respond_to?(:kasket_key_prefix)
-      end
+      Kasket.clear_local if include?(WriteMixin)
 
       reload_without_kasket_clearing(*args)
     end
