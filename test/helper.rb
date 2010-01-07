@@ -6,12 +6,6 @@ require 'active_support'
 require 'active_record'
 require 'active_record/fixtures'
 
-ActiveRecord::Base.configurations = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
-ActiveRecord::Base.establish_connection('test')
-ActiveRecord::Base.logger = Logger.new(File.dirname(__FILE__) + "/debug.log")
-
-load(File.dirname(__FILE__) + "/schema.rb")
-
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'kasket'
@@ -53,25 +47,4 @@ module Rails
   end
 end
 
-class Comment < ActiveRecord::Base
-  belongs_to :post
-end
-
-class Post < ActiveRecord::Base
-  belongs_to :blog
-  has_many :comments
-
-  has_kasket
-  has_kasket_on :title
-  has_kasket_on :blog_id, :id
-
-  def make_dirty!
-    self.updated_at = Time.now
-    self.connection.execute("UPDATE posts SET updated_at = '#{updated_at.utc.to_s(:db)}' WHERE id = #{id}")
-  end
-  kasket_dirty_methods :make_dirty!
-end
-
-class Blog < ActiveRecord::Base
-  has_many :posts
-end
+require 'test_models'
