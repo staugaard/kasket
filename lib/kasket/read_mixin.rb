@@ -11,7 +11,8 @@ module Kasket
       sql = sanitize_sql(sql)
       query = kasket_parser.parse(sql) if use_kasket?
       if query && has_kasket_index_on?(query[:index])
-        if value = Kasket.cache.read(query[:key])
+
+        if value = Rails.cache.read(query[:key])
           Array.wrap(value).collect! { |record| instantiate(record.dup) }
         else
           store_in_kasket(query[:key], find_by_sql_without_kasket(sql))
@@ -25,14 +26,14 @@ module Kasket
 
       def store_in_kasket(key, records)
         if records.size == 1
-          Kasket.cache.write(key, records.first.instance_variable_get(:@attributes))
-        else
+          Rails.cache.write(key, records.first.instance_variable_get(:@attributes).dup)
+        elsif records.size <= Kasket::CONFIGURATION[:max_collection_size]
           keys = records.map do |record|
             key = kasket_key_for_id(record.id)
-            Kasket.cache.write(key, record.instance_variable_get(:@attributes))
+            Rails.cache.write(key, record.instance_variable_get(:@attributes).dup)
             key
           end
-          Kasket.cache.write(key, keys)
+          Rails.cache.write(key, keys)
         end
         records
       end

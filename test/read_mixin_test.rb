@@ -10,24 +10,25 @@ class ReadMixinTest < ActiveSupport::TestCase
     end
 
     should "handle unsupported sql" do
+      Rails.cache.expects(:read).never
+      Rails.cache.expects(:write).never
       assert_equal @records, Post.find_by_sql_with_kasket('select unsupported sql statement')
-      assert Kasket.cache.local.empty?
     end
 
     should "read results" do
-      Kasket.cache.write("kasket-#{Kasket::Version::STRING}/posts/version=3558/id=1", @database_results.first)
-      assert_equal [ @records.first ], Post.find_by_sql('SELECT * FROM `posts` WHERE (id = 1)'), Kasket.cache.inspect
+      Rails.cache.write("kasket-#{Kasket::Version::STRING}/posts/version=3558/id=1", @database_results.first)
+      assert_equal [ @records.first ], Post.find_by_sql('SELECT * FROM `posts` WHERE (id = 1)')
     end
 
     should "store results in kasket" do
       Post.find_by_sql('SELECT * FROM `posts` WHERE (id = 1)')
 
-      assert_equal @database_results.first, Kasket.cache.read("kasket-#{Kasket::Version::STRING}/posts/version=3558/id=1"), Kasket.cache.inspect
+      assert_equal @database_results.first, Rails.cache.read("kasket-#{Kasket::Version::STRING}/posts/version=3558/id=1")
     end
 
     context "modifying results" do
       setup do
-        Kasket.cache.write("kasket-#{Kasket::Version::STRING}/posts/version=3558/id=1", @database_results.first)
+        Rails.cache.write("kasket-#{Kasket::Version::STRING}/posts/version=3558/id=1", @database_results.first)
         @record = Post.find_by_sql('SELECT * FROM `posts` WHERE (id = 1)').first
         @record.instance_variable_get(:@attributes)['id'] = 3
       end

@@ -17,11 +17,11 @@ class CacheExpiryTest < ActiveSupport::TestCase
     end
 
     should "clear all indices for instance when deleted" do
-      Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "id=#{@post.id}")
-      Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "title='#{@post.title}'")
-      Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "title='#{@post.title}'/first")
-      Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "blog_id=#{@post.blog_id}/id=#{@post.id}")
-      Kasket.cache.expects(:delete).never
+      Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "id=#{@post.id}")
+      Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "title='#{@post.title}'")
+      Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "title='#{@post.title}'/first")
+      Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "blog_id=#{@post.blog_id}/id=#{@post.id}")
+      Rails.cache.expects(:delete).never
 
       @post.destroy
     end
@@ -33,13 +33,13 @@ class CacheExpiryTest < ActiveSupport::TestCase
     end
 
     should "clear all indices for instance when updated" do
-      Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "id=#{@post.id}")
-      Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "title='#{@post.title}'")
-      Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "title='#{@post.title}'/first")
-      Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "title='new title'")
-      Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "title='new title'/first")
-      Kasket.cache.expects(:delete).with(Post.kasket_key_prefix + "blog_id=#{@post.blog_id}/id=#{@post.id}")
-      Kasket.cache.expects(:delete).never
+      Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "id=#{@post.id}")
+      Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "title='#{@post.title}'")
+      Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "title='#{@post.title}'/first")
+      Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "title='new title'")
+      Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "title='new title'/first")
+      Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "blog_id=#{@post.blog_id}/id=#{@post.id}")
+      Rails.cache.expects(:delete).never
 
       @post.title = "new title"
       @post.save
