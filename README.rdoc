@@ -1,17 +1,143 @@
-= kasket
+= Kasket
+=== Puts a cap on your queries
+A caching layer for ActiveRecord
 
-Description goes here.
+Developed and used on http://zendesk.com.
+
+== Sponsored by Zendesk - Enlightened Customer Support
+
+== Description
+
+Kasket is a safe way to cache your database queries in memcached.
+Designed to be as small and simple as possible, and to get out of the way when it is not safe to cache.
+
+You can configure exactly what models to cache and what type of queries to cache.
+
+=== Features
+
+* Declarative configuration
+* Collection caching as well as caching of single instances
+* Automatic cache expiry on database migration
+* Automatic cache expiry in Kasket udates
+* Very small code base
+
+== Setting up Kasket
+
+Kasket is set up by simply calling Kasket.setup in an initializer script.
+This will include the required modules into the ActiveRecord
+
+=== Options
+
+By default, Kasket will cache instance collection with a maximum length of 100.
+You can everride this by passing the :max_collection_size option to the Kasket.setup call:
+
+  Kasket.setup(:max_collection_size => 50)
+
+== Configuring caching of your models
+
+You can configure Kasket for any ActiveRecord model, and subclasses will automatically inherit the caching
+configuration.
+
+If you have an Account model, you can can do the simplest caching configuration like:
+
+  Account.has_kasket
+
+This will add a caching index on the id attribute of the Account model,
+and will make sure that all your calls like Account.find(1) and Account.find_by_id(1) will be cached.
+All other calls ( say Account.find_by_subdomain('zendesk') ) are untouched.
+
+If you wanted to configure a caching index on the subdomain attribute of the Account model, you would simply write
+
+  Account.has_kasket_on :subdomain
+
+This would add caching to calls like:
+* Account.find_by_subdomain('zendesk')
+* Account.find_all_by_subdomain('zendesk')
+
+and all other ways of expressing lookups on subdomain.
+
+== Cache expiry
+
+The goal of Kasket is to be as safe as possible to use, so the cache is expired in a number of situations
+* When you save a model instance
+* When your database schema changes
+* When you install a new version of Kasket
+* When you ask it to
+
+=== Cahce expiry on instance save
+
+When you save a model instance, Kasket will calculate the cache entries to expire.
+
+=== Cache expiry on database schema changes
+
+All Kasket cache keys contain a hash of the column names of the table associated with the model.
+If you somehow change your table schema, all cache entries for that table will automatically expire
+
+=== Cache expiry on Kasket upgrades
+
+All Kasket cache keys contain the Kasket version number, so upgrading Kasket will expire all Kasket cache entries.
+
+=== Manually expiring caches
+
+If you have model methods that update the database behind the back of ActiveRecord, you need to mark these methods
+as beeing dirty.
+
+  Account.kasket_dirty_methods :update_last_action
+
+This will make sure the clear the cache entries for the current instance when you call update_last_action
+
+== How does this work?
+
+== Known issues
+
+We have only used and tested Kasket on MySql.
+
+Let us know if you find any.
+
+== Requirements
+
+* ActiveRecord 2.3.x
+
+== Isn't this what Cache Money does?
+
+Absolutely, but cache money does so much more.
+
+* Cache Money has way more features than what we need
+* The Cache Money code is overly complex
+* Cache Monet seems abandoned 
 
 == Note on Patches/Pull Requests
  
 * Fork the project.
 * Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
+* Add tests for it. This is important so I don't break it in a future version unintentionally.
 * Commit, do not mess with rakefile, version, or history.
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-== Copyright
+== LICENSE:
 
-Copyright (c) 2009 Mick Staugaard. See LICENSE for details.
+(The MIT License)
+
+Copyright (c) 2010 Zendesk
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
