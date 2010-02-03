@@ -15,7 +15,7 @@ module Kasket
   class Version
     MAJOR = 0
     MINOR = 7
-    PATCH = 4
+    PATCH = 5
     STRING = "#{MAJOR}.#{MINOR}.#{PATCH}"
   end
 
