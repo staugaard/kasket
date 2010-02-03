@@ -12,6 +12,12 @@ module Kasket
         remove_from_kasket(args[0])
         update_counters_without_kasket_clearing(*args)
       end
+
+      def transaction_with_kasket_disabled(*args)
+        without_kasket do 
+          transaction_without_kasket_disabled(*args) { yield } 
+        end
+      end
     end
 
     module InstanceMethods
@@ -66,8 +72,10 @@ module Kasket
       model_class.after_destroy :clear_kasket_indices
 
       model_class.alias_method_chain :reload, :kasket_clearing
+   
 
       class << model_class
+        alias_method_chain :transaction, :kasket_disabled
         alias_method_chain :update_counters, :kasket_clearing
       end
     end

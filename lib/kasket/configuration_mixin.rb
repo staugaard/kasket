@@ -9,7 +9,7 @@ module Kasket
   module ConfigurationMixin
 
     def without_kasket(&block)
-      old_value = @use_kasket || true
+      old_value = @use_kasket
       @use_kasket = false
       yield
     ensure
@@ -17,7 +17,7 @@ module Kasket
     end
 
     def use_kasket?
-      @use_kasket != false
+      @use_kasket == true
     end
 
     def kasket_parser
@@ -69,6 +69,7 @@ module Kasket
     end
 
     def has_kasket_on(*args)
+      @use_kasket = true
       attributes = args.sort! { |x, y| x.to_s <=> y.to_s }
       if attributes != [:id] && !kasket_indices.include?([:id])
         has_kasket_on(:id)
