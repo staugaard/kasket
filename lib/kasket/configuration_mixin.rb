@@ -9,15 +9,15 @@ module Kasket
   module ConfigurationMixin
 
     def without_kasket(&block)
-      old_value = @use_kasket
-      @use_kasket = false
+      old_value = Thread.current['kasket_disabled'] || false
+      Thread.current['kasket_disabled'] = true
       yield
     ensure
-      @use_kasket = old_value
+      Thread.current['kasket_disabled'] = old_value
     end
 
     def use_kasket?
-      @use_kasket == true
+      !Thread.current['kasket_disabled']
     end
 
     def kasket_parser
@@ -69,7 +69,6 @@ module Kasket
     end
 
     def has_kasket_on(*args)
-      @use_kasket = true
       attributes = args.sort! { |x, y| x.to_s <=> y.to_s }
       if attributes != [:id] && !kasket_indices.include?([:id])
         has_kasket_on(:id)

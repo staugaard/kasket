@@ -15,7 +15,7 @@ class TransactionTest < ActiveSupport::TestCase
     setup { Comment.has_kasket } 
     should "disable kasket" do 
       Post.transaction do
-        assert_equal true,  Comment.use_kasket?
+        assert_equal false,  Comment.use_kasket?
         assert_equal false, Post.use_kasket?
         Comment.transaction do
           assert_equal false, Post.use_kasket?

@@ -7,7 +7,6 @@ require 'kasket/active_record_patches'
 module Kasket
   autoload :ConfigurationMixin, 'kasket/configuration_mixin'
   autoload :ReloadAssociationMixin, 'kasket/reload_association_mixin'
-  autoload :RackMiddleware, 'kasket/rack_middleware'
   autoload :Query, 'kasket/query'
 
   CONFIGURATION = {:max_collection_size => 100}
@@ -15,7 +14,7 @@ module Kasket
   class Version
     MAJOR = 0
     MINOR = 7
-    PATCH = 5
+    PATCH = 6
     STRING = "#{MAJOR}.#{MINOR}.#{PATCH}"
   end
 
