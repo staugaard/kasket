@@ -1,4 +1,5 @@
 require 'active_support'
+require "digest/md5"
 
 module Kasket
   autoload :ReadMixin, 'kasket/read_mixin'
@@ -29,13 +30,19 @@ module Kasket
     end
 
     def kasket_key_for(attribute_value_pairs)
-      kasket_key_prefix + attribute_value_pairs.map do |attribute, value|
+      key = attribute_value_pairs.map do |attribute, value|
         if (column = columns_hash[attribute.to_s]) && column.number?
           value = convert_number_column_value(value)
         end
-        
+
         attribute.to_s + '=' + connection.quote(value, column)
       end.join('/')
+
+      if key.size > (250 - kasket_key_prefix.size) || key =~ /\s/
+        key = Digest::MD5.hexdigest(key)
+      end
+
+      kasket_key_prefix + key
     end
 
     def convert_number_column_value(value)

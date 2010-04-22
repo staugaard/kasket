@@ -81,7 +81,7 @@ class ParserTest < ActiveSupport::TestCase
       should "include all indexed attributes" do
         assert_match(/id=1$/, @parser.parse('SELECT * FROM `posts` WHERE (id = 1)')[:key])
         assert_match(/blog_id=2\/id=1$/, @parser.parse('SELECT * FROM `posts` WHERE (id = 1 AND blog_id = 2)')[:key])
-        assert_match(/id=1\/title='world''s best title'$/, @parser.parse("SELECT * FROM `posts` WHERE (id = 1 AND title = 'world\\'s best title')")[:key])
+        assert_match(/id=1\/title='title'$/, @parser.parse("SELECT * FROM `posts` WHERE (id = 1 AND title = 'title')")[:key])
       end
 
       context "when limit 1" do

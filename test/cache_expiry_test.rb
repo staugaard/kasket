@@ -27,7 +27,7 @@ class CacheExpiryTest < ActiveSupport::TestCase
     end
 
     should "be removed from cache when updated" do
-      @post.title = "new title"
+      @post.title = "new_title"
       @post.save
       assert_nil(Rails.cache.read(@post.kasket_key))
     end
@@ -36,12 +36,12 @@ class CacheExpiryTest < ActiveSupport::TestCase
       Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "id=#{@post.id}")
       Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "title='#{@post.title}'")
       Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "title='#{@post.title}'/first")
-      Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "title='new title'")
-      Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "title='new title'/first")
+      Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "title='new_title'")
+      Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "title='new_title'/first")
       Rails.cache.expects(:delete).with(Post.kasket_key_prefix + "blog_id=#{@post.blog_id}/id=#{@post.id}")
       Rails.cache.expects(:delete).never
 
-      @post.title = "new title"
+      @post.title = "new_title"
       @post.save
     end
 

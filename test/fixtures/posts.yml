@@ -1,15 +1,15 @@
 no_comments:
   blog: a_blog
-  title: This post has no comments
+  title: no_comments
 
 has_two_comments:
   blog: a_blog
-  title: This post has a few comments
+  title: few_comments
 
 on_other_blog:
   blog: other_blog
-  title: This post has no comments
+  title: no_comments
 
 has_many_comments:
   blog: a_blog
-  title: A shit load of comments on this one
+  title: many_comments
