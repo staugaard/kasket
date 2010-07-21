@@ -9,11 +9,11 @@ class ParserTest < ActiveSupport::TestCase
     end
 
     should "extract conditions" do
-      assert_equal [[:color, "red"], [:size, "big"]], @parser.parse('SELECT * FROM `posts` WHERE (`posts`.`color` = red AND `posts`.`size` = big)')[:attributes]
+      assert_equal [[:blog_id, "big"], [:title, "red"]], @parser.parse('SELECT * FROM `posts` WHERE (`posts`.`title` = red AND `posts`.`blog_id` = big)')[:attributes]
     end
 
     should "extract required index" do
-      assert_equal [:color, :size], @parser.parse('SELECT * FROM `posts` WHERE (`posts`.`color` = red AND `posts`.`size` = big)')[:index]
+      assert_equal [:blog_id, :title], @parser.parse('SELECT * FROM `posts` WHERE (`posts`.`title` = red AND `posts`.`blog_id` = big)')[:index]
     end
 
     should "only support queries against its model's table" do
@@ -26,7 +26,7 @@ class ParserTest < ActiveSupport::TestCase
     end
 
     should "support vaguely formatted queries" do
-      assert @parser.parse('SELECT * FROM "posts" WHERE (color = red AND size = big)')
+      assert @parser.parse('SELECT * FROM "posts" WHERE (title = red AND blog_id = big)')
     end
 
     context "extract options" do
@@ -44,27 +44,27 @@ class ParserTest < ActiveSupport::TestCase
     context "unsupported queries" do
 
       should "include advanced limits" do
-        assert !@parser.parse('SELECT * FROM `posts` WHERE (color = red AND size = big) LIMIT 2')
+        assert !@parser.parse('SELECT * FROM `posts` WHERE (title = red AND blog_id = big) LIMIT 2')
       end
 
       should "include joins" do
-        assert !@parser.parse('SELECT * FROM `posts`, `trees` JOIN ON apple.tree_id = tree.id WHERE (color = red)')
+        assert !@parser.parse('SELECT * FROM `posts`, `trees` JOIN ON apple.tree_id = tree.id WHERE (title = red)')
       end
 
       should "include specific selects" do
-        assert !@parser.parse('SELECT id FROM `posts` WHERE (color = red)')
+        assert !@parser.parse('SELECT id FROM `posts` WHERE (title = red)')
       end
 
       should "include offset" do
-        assert !@parser.parse('SELECT * FROM `posts` WHERE (color = red) LIMIT 1 OFFSET 2')
+        assert !@parser.parse('SELECT * FROM `posts` WHERE (title = red) LIMIT 1 OFFSET 2')
       end
 
       should "include order" do
-        assert !@parser.parse('SELECT * FROM `posts` WHERE (color = red) ORDER DESC')
+        assert !@parser.parse('SELECT * FROM `posts` WHERE (title = red) ORDER DESC')
       end
 
       should "include the OR operator" do
-        assert !@parser.parse('SELECT * FROM `posts` WHERE (color = red OR size = big) LIMIT 2')
+        assert !@parser.parse('SELECT * FROM `posts` WHERE (title = red OR blog_id = big) LIMIT 2')
       end
 
       should "include the IN operator" do

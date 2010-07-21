@@ -31,11 +31,9 @@ module Kasket
 
     def kasket_key_for(attribute_value_pairs)
       key = attribute_value_pairs.map do |attribute, value|
-        if (column = columns_hash[attribute.to_s]) && column.number?
-          value = convert_number_column_value(value)
-        end
-
-        attribute.to_s + '=' + connection.quote(value, column)
+        column = columns_hash[attribute.to_s]
+        value = nil if value.blank?
+        attribute.to_s + '=' + connection.quote(column.type_cast(value), column)
       end.join('/')
 
       if key.size > (250 - kasket_key_prefix.size) || key =~ /\s/
@@ -43,18 +41,6 @@ module Kasket
       end
 
       kasket_key_prefix + key
-    end
-
-    def convert_number_column_value(value)
-      if value == false
-        0
-      elsif value == true
-        1
-      elsif value.is_a?(String) && value.blank?
-        nil
-      else
-        value
-      end
     end
 
     def kasket_key_for_id(id)
