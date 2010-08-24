@@ -29,9 +29,18 @@ module Kasket
     ActiveRecord::Associations::HasOneThroughAssociation.send(:include, Kasket::ReloadAssociationMixin)
   end
 
+  def self.cache_store=(options)
+    @cache_store = ActiveSupport::Cache.lookup_store(options)
+  end
+
+  def self.cache
+    @cache_store ||= Rails.cache
+  end
+
   def clear_local
-    if Rails.cache.respond_to?(:with_local_cache)
-      Rails.cache.send(:local_cache).try(:clear)
+    if Kasket.cache.respond_to?(:with_local_cache)
+      Kasket.cache.send(:local_cache).try(:clear)
     end
   end
 end
+

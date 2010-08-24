@@ -4,7 +4,7 @@ module Kasket
     module ClassMethods
       def remove_from_kasket(ids)
         Array(ids).each do |id|
-          Rails.cache.delete(kasket_key_for_id(id))
+          Kasket.cache.delete(kasket_key_for_id(id))
         end
       end
 
@@ -14,8 +14,8 @@ module Kasket
       end
 
       def transaction_with_kasket_disabled(*args)
-        without_kasket do 
-          transaction_without_kasket_disabled(*args) { yield } 
+        without_kasket do
+          transaction_without_kasket_disabled(*args) { yield }
         end
       end
     end
@@ -27,7 +27,7 @@ module Kasket
 
       def store_in_kasket
         if !readonly? && kasket_key
-          Rails.cache.write(kasket_key, @attributes.dup)
+          Kasket.cache.write(kasket_key, @attributes.dup)
         end
       end
 
@@ -54,7 +54,7 @@ module Kasket
 
       def clear_kasket_indices
         kasket_keys.each do |key|
-          Rails.cache.delete(key)
+          Kasket.cache.delete(key)
         end
       end
 
@@ -72,7 +72,7 @@ module Kasket
       model_class.after_destroy :clear_kasket_indices
 
       model_class.alias_method_chain :reload, :kasket_clearing
-   
+
 
       class << model_class
         alias_method_chain :transaction, :kasket_disabled
@@ -81,3 +81,4 @@ module Kasket
     end
   end
 end
+

@@ -32,7 +32,7 @@ class ActiveSupport::TestCase
 
   setup :clear_cache
   def clear_cache
-    Rails.cache.clear
+    Kasket.cache.clear
   end
 end
 
