@@ -28,11 +28,11 @@ module Kasket
       key_value_map = Rails.cache.read_multi(*query[:key])
       missing_ids = []
 
-      key_value_map.each do |key, value|
-        if value.nil?
-          missing_ids << key.split('=').last.to_i
-        else
+      query[:key].each do |key|
+        if value = key_value_map[key]
           key_value_map[key] = instantiate(value.dup)
+        else
+          missing_ids << key.split('=').last.to_i
         end
       end
 
