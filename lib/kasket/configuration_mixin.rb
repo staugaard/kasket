@@ -30,17 +30,21 @@ module Kasket
     end
 
     def kasket_key_for(attribute_value_pairs)
-      key = attribute_value_pairs.map do |attribute, value|
-        column = columns_hash[attribute.to_s]
-        value = nil if value.blank?
-        attribute.to_s + '=' + connection.quote(column.type_cast(value), column)
-      end.join('/')
+      if attribute_value_pairs.size == 1 && attribute_value_pairs[0][0] == :id && attribute_value_pairs[0][1].is_a?(Array)
+        attribute_value_pairs[0][1].map {|id| kasket_key_for_id(id)}
+      else
+        key = attribute_value_pairs.map do |attribute, value|
+          column = columns_hash[attribute.to_s]
+          value = nil if value.blank?
+          attribute.to_s + '=' + connection.quote(column.type_cast(value), column)
+        end.join('/')
 
-      if key.size > (250 - kasket_key_prefix.size) || key =~ /\s/
-        key = Digest::MD5.hexdigest(key)
+        if key.size > (250 - kasket_key_prefix.size) || key =~ /\s/
+          key = Digest::MD5.hexdigest(key)
+        end
+
+        kasket_key_prefix + key
       end
-
-      kasket_key_prefix + key
     end
 
     def kasket_key_for_id(id)

@@ -8,18 +8,42 @@ module Kasket
     end
 
     def find_by_sql_with_kasket(sql)
-      sql = sanitize_sql(sql)
-      query = kasket_parser.parse(sql) if use_kasket?
+      query = kasket_parser.parse(sanitize_sql(sql)) if use_kasket?
       if query && has_kasket_index_on?(query[:index])
-
-        if value = Rails.cache.read(query[:key])
-          Array.wrap(value).collect { |record| instantiate(record.dup) }
+        if query[:key].is_a?(Array)
+          find_by_sql_with_kasket_on_id_array(sql, query)
         else
-          store_in_kasket(query[:key], find_by_sql_without_kasket(sql))
+          if value = Rails.cache.read(query[:key])
+            Array.wrap(value).collect { |record| instantiate(record.dup) }
+          else
+            store_in_kasket(query[:key], find_by_sql_without_kasket(sql))
+          end
         end
       else
         find_by_sql_without_kasket(sql)
       end
+    end
+
+    def find_by_sql_with_kasket_on_id_array(sql, query)
+      key_value_map = Rails.cache.read_multi(*query[:key])
+      missing_ids = []
+
+      key_value_map.each do |key, value|
+        if value.nil?
+          missing_ids << key.split('=').last.to_i
+        else
+          key_value_map[key] = instantiate(value.dup)
+        end
+      end
+
+      without_kasket do
+        find(missing_ids).each do |instance|
+          instance.store_in_kasket
+          key_value_map[instance.kasket_key] = instance
+        end
+      end
+
+      key_value_map.values
     end
 
     protected
@@ -33,7 +57,8 @@ module Kasket
             Rails.cache.write(key, record.instance_variable_get(:@attributes).dup)
             key
           end
-          Rails.cache.write(key, keys)
+
+          Rails.cache.write(key, keys) if key.is_a?(String)
         end
         records
       end

@@ -12,7 +12,7 @@ module Kasket
       @model_class = model_class
       @supported_query_pattern = /^select \* from (?:`|")#{@model_class.table_name}(?:`|") where \((.*)\)(|\s+limit 1)\s*$/i
       @table_and_column_pattern = /(?:(?:`|")?#{@model_class.table_name}(?:`|")?\.)?(?:`|")?(\w+)(?:`|")?/ # Matches: `users`.id, `users`.`id`, users.id, id
-      @key_eq_value_pattern = /^[\(\s]*#{@table_and_column_pattern}\s+=\s+#{VALUE}[\)\s]*$/ # Matches: KEY = VALUE, (KEY = VALUE), ()(KEY = VALUE))
+      @key_eq_value_pattern = /^[\(\s]*#{@table_and_column_pattern}\s+(=|IN)\s+#{VALUE}[\)\s]*$/ # Matches: KEY = VALUE, (KEY = VALUE), ()(KEY = VALUE))
     end
 
     def parse(sql)
@@ -39,10 +39,19 @@ module Kasket
       def parse_condition(conditions = '', *values)
         values = values.dup
         conditions.split(AND).inject([]) do |pairs, condition|
-          matched, column_name, sql_value = *(@key_eq_value_pattern.match(condition))
+          matched, column_name, operator, sql_value = *(@key_eq_value_pattern.match(condition))
           if matched
-            value = sql_value == '?' ? values.shift : sql_value
-            pairs << [column_name.to_sym, value.gsub(/''|\\'/, "'")]
+            if operator == 'IN'
+              if column_name == 'id'
+                values = sql_value[1..(-2)].split(',').map(&:strip)
+                pairs << [column_name.to_sym, values]
+              else
+                return nil
+              end
+            else
+              value = sql_value == '?' ? values.shift : sql_value
+              pairs << [column_name.to_sym, value.gsub(/''|\\'/, "'")]
+            end
           else
             return nil
           end

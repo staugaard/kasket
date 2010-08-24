@@ -25,6 +25,16 @@ class ParserTest < ActiveSupport::TestCase
       assert @parser.parse('SELECT * FROM `posts` WHERE (`posts`.`id` = 2) LIMIT 1')
     end
 
+    should "support IN queries on id" do
+      parsed_query = @parser.parse('SELECT * FROM `posts` WHERE (`posts`.`id` IN (1,2,3))')
+      assert(parsed_query)
+      assert_equal([[:id, ['1', '2', '3']]], parsed_query[:attributes])
+    end
+
+    should "not support IN queries on other attributes" do
+      assert(!@parser.parse('SELECT * FROM `posts` WHERE (`posts`.`hest` IN (1,2,3))'))
+    end
+
     should "support vaguely formatted queries" do
       assert @parser.parse('SELECT * FROM "posts" WHERE (title = red AND blog_id = big)')
     end
@@ -66,11 +76,6 @@ class ParserTest < ActiveSupport::TestCase
       should "include the OR operator" do
         assert !@parser.parse('SELECT * FROM `posts` WHERE (title = red OR blog_id = big) LIMIT 2')
       end
-
-      should "include the IN operator" do
-        assert !@parser.parse('SELECT * FROM `posts` WHERE (id IN (1,2,3))')
-      end
-
     end
 
     context "key generation" do
@@ -82,6 +87,13 @@ class ParserTest < ActiveSupport::TestCase
         assert_match(/id=1$/, @parser.parse('SELECT * FROM `posts` WHERE (id = 1)')[:key])
         assert_match(/blog_id=2\/id=1$/, @parser.parse('SELECT * FROM `posts` WHERE (id = 1 AND blog_id = 2)')[:key])
         assert_match(/id=1\/title='title'$/, @parser.parse("SELECT * FROM `posts` WHERE (id = 1 AND title = 'title')")[:key])
+      end
+
+      should "generate multiple keys on IN queries" do
+        keys = @parser.parse('SELECT * FROM `posts` WHERE (id IN (1,2))')[:key]
+        assert_instance_of(Array, keys)
+        assert_match(/id=1$/, keys[0])
+        assert_match(/id=2$/, keys[1])
       end
 
       context "when limit 1" do
