@@ -4,7 +4,7 @@ class ReadMixinTest < ActiveSupport::TestCase
 
   context "find by sql with kasket" do
     setup do
-      @database_results = [ { 'id' => 1, 'title' => 'Hello' }, { 'id' => 2, 'title' => 'World' } ]
+      @database_results = [ { 'id' => 1, 'title' => 'Hello' } ]
       @records = @database_results.map { |r| Post.send(:instantiate, r) }
       Post.stubs(:find_by_sql_without_kasket).returns(@records)
     end
