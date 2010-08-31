@@ -7,13 +7,13 @@ class FindSomeTest < ActiveSupport::TestCase
     post1 = Post.first
     post2 = Post.last
 
-    assert_nil(Rails.cache.read(post1.kasket_key))
-    assert_nil(Rails.cache.read(post2.kasket_key))
+    assert_nil(Kasket.cache.read(post1.kasket_key))
+    assert_nil(Kasket.cache.read(post2.kasket_key))
 
     Post.find(post1.id, post2.id)
 
-    assert(Rails.cache.read(post1.kasket_key))
-    assert(Rails.cache.read(post2.kasket_key))
+    assert(Kasket.cache.read(post1.kasket_key))
+    assert(Kasket.cache.read(post2.kasket_key))
     Post.connection.expects(:select_all).never
     Post.find(post1.id, post2.id)
   end
@@ -22,8 +22,8 @@ class FindSomeTest < ActiveSupport::TestCase
     post1 = Post.first
     post2 = Post.last
     assert_equal(post1, Post.find(post1.id))
-    assert(Rails.cache.read(post1.kasket_key))
-    assert_nil(Rails.cache.read(post2.kasket_key))
+    assert(Kasket.cache.read(post1.kasket_key))
+    assert_nil(Kasket.cache.read(post2.kasket_key))
 
     Post.expects(:find_by_sql_without_kasket).with("SELECT * FROM \"posts\" WHERE (\"posts\".\"id\" = #{post2.id}) ").returns([post2])
     found_posts = Post.find(post1.id, post2.id)

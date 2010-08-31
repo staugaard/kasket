@@ -13,7 +13,7 @@ module Kasket
         if query[:key].is_a?(Array)
           find_by_sql_with_kasket_on_id_array(sql, query)
         else
-          if value = Rails.cache.read(query[:key])
+          if value = Kasket.cache.read(query[:key])
             Array.wrap(value).collect { |record| instantiate(record.dup) }
           else
             store_in_kasket(query[:key], find_by_sql_without_kasket(sql))
@@ -25,7 +25,7 @@ module Kasket
     end
 
     def find_by_sql_with_kasket_on_id_array(sql, query)
-      key_value_map = Rails.cache.read_multi(*query[:key])
+      key_value_map = Kasket.cache.read_multi(*query[:key])
       missing_ids = []
 
       query[:key].each do |key|
@@ -50,18 +50,19 @@ module Kasket
 
       def store_in_kasket(key, records)
         if records.size == 1
-          Rails.cache.write(key, records.first.instance_variable_get(:@attributes).dup)
+          Kasket.cache.write(key, records.first.instance_variable_get(:@attributes).dup)
         elsif records.size <= Kasket::CONFIGURATION[:max_collection_size]
           keys = records.map do |record|
             key = kasket_key_for_id(record.id)
-            Rails.cache.write(key, record.instance_variable_get(:@attributes).dup)
+            Kasket.cache.write(key, record.instance_variable_get(:@attributes).dup)
             key
           end
 
-          Rails.cache.write(key, keys) if key.is_a?(String)
+          Kasket.cache.write(key, keys) if key.is_a?(String)
         end
         records
       end
 
   end
 end
+
