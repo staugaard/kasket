@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{kasket}
-  s.version = "0.8.2"
+  s.version = "0.8.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mick Staugaard", "Eric Chapweske"]
-  s.date = %q{2010-08-31}
+  s.date = %q{2010-09-02}
   s.description = %q{puts a cap on your queries}
   s.email = %q{mick@staugaard.com}
   s.extra_rdoc_files = [
