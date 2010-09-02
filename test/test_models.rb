@@ -10,6 +10,8 @@ create_model :comment do
   end
 
   belongs_to :post
+
+  has_kasket_on :post_id
 end
 
 create_model :post do
