@@ -14,8 +14,8 @@ begin
     gem.email = "mick@staugaard.com"
     gem.homepage = "http://github.com/staugaard/kasket"
     gem.authors = ["Mick Staugaard", "Eric Chapweske"]
-    gem.add_dependency('activerecord', '>= 2.3.4')
-    gem.add_dependency('activesupport', '>= 2.3.4')
+    gem.add_dependency('activerecord', '~> 2.3.4')
+    gem.add_dependency('activesupport', '~> 2.3.4')
     gem.add_development_dependency "shoulda", ">= 0"
     gem.add_development_dependency "mocha", ">= 0"
     gem.add_development_dependency "temping", ">= 1.3.0"

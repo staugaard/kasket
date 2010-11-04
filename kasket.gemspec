@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{kasket}
-  s.version = "0.8.3"
+  s.version = "0.8.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mick Staugaard", "Eric Chapweske"]
-  s.date = %q{2010-09-02}
+  s.date = %q{2010-11-04}
   s.description = %q{puts a cap on your queries}
   s.email = %q{mick@staugaard.com}
   s.extra_rdoc_files = [
@@ -67,21 +67,21 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<activerecord>, [">= 2.3.4"])
-      s.add_runtime_dependency(%q<activesupport>, [">= 2.3.4"])
+      s.add_runtime_dependency(%q<activerecord>, ["~> 2.3.4"])
+      s.add_runtime_dependency(%q<activesupport>, ["~> 2.3.4"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<mocha>, [">= 0"])
       s.add_development_dependency(%q<temping>, [">= 1.3.0"])
     else
-      s.add_dependency(%q<activerecord>, [">= 2.3.4"])
-      s.add_dependency(%q<activesupport>, [">= 2.3.4"])
+      s.add_dependency(%q<activerecord>, ["~> 2.3.4"])
+      s.add_dependency(%q<activesupport>, ["~> 2.3.4"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<mocha>, [">= 0"])
       s.add_dependency(%q<temping>, [">= 1.3.0"])
     end
   else
-    s.add_dependency(%q<activerecord>, [">= 2.3.4"])
-    s.add_dependency(%q<activesupport>, [">= 2.3.4"])
+    s.add_dependency(%q<activerecord>, ["~> 2.3.4"])
+    s.add_dependency(%q<activesupport>, ["~> 2.3.4"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<mocha>, [">= 0"])
     s.add_dependency(%q<temping>, [">= 1.3.0"])
