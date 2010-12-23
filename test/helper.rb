@@ -1,10 +1,10 @@
 require 'rubygems'
-require 'ruby-debug'
+
+require 'bundler'
+Bundler.setup
+Bundler.require(:default, :development)
+
 require 'test/unit'
-require 'mocha'
-require 'shoulda'
-require 'active_support'
-require 'active_record'
 require 'active_record/fixtures'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
