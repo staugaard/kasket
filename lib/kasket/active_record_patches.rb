@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 module Kasket
   module FixForAssociationAccessorMethods
     def association_accessor_methods(reflection, association_proxy_class)

@@ -1,4 +1,4 @@
-require 'rubygems'
+# -*- encoding: utf-8 -*-
 require 'active_record'
 require 'active_support'
 

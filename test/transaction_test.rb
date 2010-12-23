@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/helper'
+require File.expand_path("helper", File.dirname(__FILE__))
 
 class TransactionTest < ActiveSupport::TestCase
   context "Transactions" do 

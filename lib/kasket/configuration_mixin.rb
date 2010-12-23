@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 require 'active_support'
 require "digest/md5"
 
@@ -74,9 +75,9 @@ module Kasket
       @kasket_indices ||= []
       @kasket_indices << attributes unless @kasket_indices.include?(attributes)
 
-      include WriteMixin unless instance_methods.include?('store_in_kasket')
-      extend DirtyMixin unless methods.include?('kasket_dirty_methods')
-      extend ReadMixin unless methods.include?('find_by_sql_with_kasket')
+      include WriteMixin unless include?(WriteMixin)
+      extend DirtyMixin unless respond_to?(:kasket_dirty_methods)
+      extend ReadMixin unless respond_to?(:find_by_sql_with_kasket)
     end
   end
 end

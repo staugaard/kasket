@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/helper'
+require File.expand_path("helper", File.dirname(__FILE__))
 require "digest/md5"
 
 class ConfigurationMixinTest < ActiveSupport::TestCase
