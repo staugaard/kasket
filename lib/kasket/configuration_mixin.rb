@@ -77,7 +77,7 @@ module Kasket
 
       include WriteMixin unless include?(WriteMixin)
       extend DirtyMixin unless respond_to?(:kasket_dirty_methods)
-      extend ReadMixin unless respond_to?(:find_by_sql_with_kasket)
+      extend ReadMixin unless methods.map(&:to_sym).include?(:find_by_sql_with_kasket)
     end
   end
 end
