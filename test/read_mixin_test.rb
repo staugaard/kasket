@@ -37,7 +37,8 @@ class ReadMixinTest < ActiveSupport::TestCase
       assert_equal(@comment_database_result, stored_value.map {|key| Kasket.cache.read(key)})
 
       Comment.expects(:find_by_sql_without_kasket).never
-      assert_equal(@comment_records, Comment.find_by_sql('SELECT * FROM `comments` WHERE (post_id = 1)'))
+      records = Comment.find_by_sql('SELECT * FROM `comments` WHERE (post_id = 1)')
+      assert_equal(@comment_records, records.sort {|c1, c2| c1.id <=> c2.id})
     end
 
     context "modifying results" do
