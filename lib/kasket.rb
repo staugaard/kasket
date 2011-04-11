@@ -21,6 +21,8 @@ module Kasket
   module_function
 
   def setup(options = {})
+    return if ActiveRecord::Base.extended_by.member?(Kasket::ConfigurationMixin)
+
     CONFIGURATION[:max_collection_size] = options[:max_collection_size] if options[:max_collection_size]
 
     ActiveRecord::Base.extend(Kasket::ConfigurationMixin)
