@@ -55,15 +55,19 @@ module Kasket
 
       def store_in_kasket(key, records)
         if records.size == 1
-          Kasket.cache.write(key, records.first.instance_variable_get(:@attributes).dup)
-        elsif records.size <= Kasket::CONFIGURATION[:max_collection_size]
-          instance_keys = records.map do |record|
-            instance_key = kasket_key_for_id(record.id)
-            Kasket.cache.write(instance_key, record.instance_variable_get(:@attributes).dup)
-            instance_key
+          if records.first.kasket_cacheable?
+            Kasket.cache.write(key, records.first.instance_variable_get(:@attributes).dup)
           end
+        elsif records.size <= Kasket::CONFIGURATION[:max_collection_size]
+          if records.all?(&:kasket_cacheable?)
+            instance_keys = records.map do |record|
+              instance_key = kasket_key_for_id(record.id)
+              Kasket.cache.write(instance_key, record.instance_variable_get(:@attributes).dup)
+              instance_key
+            end
 
-          Kasket.cache.write(key, instance_keys) if key.is_a?(String)
+            Kasket.cache.write(key, instance_keys) if key.is_a?(String)
+          end
         end
         records
       end

@@ -8,6 +8,8 @@ group :development do
   gem 'shoulda'
   gem 'mocha'
   gem 'temping', '~> 1.3.0'
-  gem 'sqlite3-ruby', :platforms => :ruby
+  gem 'sqlite3', :platforms => :ruby
   gem 'activerecord-jdbcsqlite3-adapter', :platforms => :jruby
+  gem 'ruby-debug',   :platforms => :mri_18
+  gem 'ruby-debug19', :platforms => :mri_19
 end

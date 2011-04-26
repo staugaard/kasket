@@ -26,8 +26,12 @@ module Kasket
         @kasket_key ||= new_record? ? nil : self.class.kasket_key_for_id(id)
       end
 
+      def kasket_cacheable?
+        true
+      end
+
       def store_in_kasket
-        if !readonly? && kasket_key
+        if kasket_cacheable? && kasket_key
           Kasket.cache.write(kasket_key, @attributes.dup)
         end
       end

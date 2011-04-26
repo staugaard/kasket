@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("shoulda")
   s.add_development_dependency("mocha")
   s.add_development_dependency("temping", "~> 1.3.0")
-  s.add_development_dependency("sqlite3-ruby")
+  s.add_development_dependency("sqlite3")
 
   s.files        = Dir.glob("lib/**/*") + %w(README.rdoc)
   s.test_files   = Dir.glob("test/**/*")

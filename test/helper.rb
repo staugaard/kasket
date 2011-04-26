@@ -4,6 +4,11 @@ require 'bundler'
 Bundler.setup
 Bundler.require(:default, :development)
 
+if defined?(Debugger)
+  ::Debugger.start
+  ::Debugger.settings[:autoeval] = true if ::Debugger.respond_to?(:settings)
+end
+
 require 'test/unit'
 require 'active_record/fixtures'
 
@@ -42,9 +47,14 @@ $LOAD_PATH.unshift(ActiveSupport::TestCase.fixture_path)
 module Rails
   module_function
   CACHE = ActiveSupport::Cache::MemoryStore.new
+  LOGGER = Logger.new(STDOUT)
 
   def cache
     CACHE
+  end
+
+  def logger
+    LOGGER
   end
 end
 
