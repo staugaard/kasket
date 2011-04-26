@@ -26,7 +26,7 @@ module Kasket
         @kasket_key ||= new_record? ? nil : self.class.kasket_key_for_id(id)
       end
 
-      def kasket_cacheable?
+      def default_kasket_cacheable?
         true
       end
 
@@ -72,6 +72,10 @@ module Kasket
     def self.included(model_class)
       model_class.extend         ClassMethods
       model_class.send :include, InstanceMethods
+
+      unless model_class.method_defined?(:kasket_cacheable?)
+        model_class.send(:alias_method, :kasket_cacheable?, :default_kasket_cacheable?)
+      end
 
       model_class.after_save :clear_kasket_indices
       model_class.after_destroy :clear_kasket_indices
