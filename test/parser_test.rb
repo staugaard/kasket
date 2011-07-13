@@ -8,6 +8,11 @@ class ParserTest < ActiveSupport::TestCase
       @parser = Kasket::QueryParser.new(Post)
     end
 
+    should 'not support IN queries in combination with other conditions' do
+      parsed_query = @parser.parse('SELECT * FROM `posts` WHERE (`posts`.`id` IN (1,2,3) AND `posts`.`is_active` = 1)')
+      assert(!parsed_query)
+    end
+
     should "extract conditions" do
       assert_equal [[:blog_id, "big"], [:title, "red"]], @parser.parse('SELECT * FROM `posts` WHERE (`posts`.`title` = red AND `posts`.`blog_id` = big)')[:attributes]
     end

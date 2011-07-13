@@ -21,6 +21,12 @@ module Kasket
         query = Hash.new
         query[:attributes] = sorted_attribute_value_pairs(match[1])
         return nil if query[:attributes].nil?
+
+        if query[:attributes].size > 1 && query[:attributes].map(&:last).any? {|a| a.is_a?(Array)}
+          # this is a query with IN conditions AND other conditions
+          return nil
+        end
+
         query[:index] = query[:attributes].map(&:first)
         query[:limit] = match[2].blank? ? nil : 1
         query[:key] = @model_class.kasket_key_for(query[:attributes])
