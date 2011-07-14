@@ -59,7 +59,7 @@ module Kasket
             Kasket.cache.write(key, records.first.instance_variable_get(:@attributes).dup)
           end
         elsif records.empty?
-          RAILS_DEFAULT_LOGGER.debug("[KASKET] would have stored an empty resultset") if defined?(RAILS_DEFAULT_LOGGER)
+          ActiveRecord::Base.logger.info("[KASKET] would have stored an empty resultset") if ActiveRecord::Base.logger
         elsif records.size <= Kasket::CONFIGURATION[:max_collection_size]
           if records.all?(&:kasket_cacheable?)
             instance_keys = records.map do |record|
