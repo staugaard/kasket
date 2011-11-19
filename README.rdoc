@@ -1,4 +1,4 @@
-= Kasket
+= Kasket {<img src="https://secure.travis-ci.org/staugaard/kasket.png" />}[http://travis-ci.org/staugaard/kasket]
 === Puts a cap on your queries
 A caching layer for ActiveRecord
 
