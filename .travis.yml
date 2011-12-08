@@ -4,3 +4,7 @@ rvm:
   - jruby
   - ree
   - rbx
+branches:
+  only:
+    - master
+    - activerecord-2.3
