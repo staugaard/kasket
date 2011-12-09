@@ -7,7 +7,7 @@ module Kasket
       @binds       = binds.dup
     end
 
-    def accept(object)
+    def accept(node)
       self.last_column = nil
       super
     end
@@ -24,96 +24,96 @@ module Kasket
       @model_class.columns_hash[name.to_s]
     end
 
-    def visit_Arel_Nodes_SelectStatement(o)
-      return :unsupported if o.with
-      return :unsupported if o.offset
-      return :unsupported if o.lock
-      return :unsupported if o.orders.any?
-      return :unsupported if o.cores.size != 1
+    def visit_Arel_Nodes_SelectStatement(node)
+      return :unsupported if node.with
+      return :unsupported if node.offset
+      return :unsupported if node.lock
+      return :unsupported if node.orders.any?
+      return :unsupported if node.cores.size != 1
 
-      query = visit_Arel_Nodes_SelectCore(o.cores[0])
+      query = visit_Arel_Nodes_SelectCore(node.cores[0])
       return query if query == :unsupported
 
       query = query.inject({}) do |memo, item|
         memo.merge(item)
       end
 
-      query.merge!(visit(o.limit)) if o.limit
+      query.merge!(visit(node.limit)) if node.limit
       query
     end
 
-    def visit_Arel_Nodes_SelectCore(o)
-      return :unsupported if o.groups.any?
-      return :unsupported if o.having
-      return :unsupported if o.set_quantifier
-      return :unsupported if !o.source || o.source.empty?
-      return :unsupported if o.projections.size != 1
+    def visit_Arel_Nodes_SelectCore(node)
+      return :unsupported if node.groups.any?
+      return :unsupported if node.having
+      return :unsupported if node.set_quantifier
+      return :unsupported if !node.source || node.source.empty?
+      return :unsupported if node.projections.size != 1
 
-      select = o.projections[0]
+      select = node.projections[0]
       select = select.name if select.respond_to?(:name)
       return :unsupported if select != '*'
 
-      parts = [visit(o.source)]
+      parts = [visit(node.source)]
 
-      parts += o.wheres.map {|where| visit(where) }
+      parts += node.wheres.map {|where| visit(where) }
 
       parts.include?(:unsupported) ? :unsupported : parts
     end
 
-    def visit_Arel_Nodes_Limit(o)
-      {:limit => o.value.to_i}
+    def visit_Arel_Nodes_Limit(node)
+      {:limit => node.value.to_i}
     end
 
-    def visit_Arel_Nodes_JoinSource(o)
-      return :unsupported if !o.left || o.right.any?
-      return :unsupported if !o.left.is_a?(Arel::Table)
-      visit(o.left)
+    def visit_Arel_Nodes_JoinSource(node)
+      return :unsupported if !node.left || node.right.any?
+      return :unsupported if !node.left.is_a?(Arel::Table)
+      visit(node.left)
     end
 
-    def visit_Arel_Table(o)
-      {:from => o.name}
+    def visit_Arel_Table(node)
+      {:from => node.name}
     end
 
-    def visit_Arel_Nodes_And(o)
-      attributes = o.children.map { |child| visit(child) }
+    def visit_Arel_Nodes_And(node)
+      attributes = node.children.map { |child| visit(child) }
       return :unsupported if attributes.include?(:unsupported)
       attributes.sort! { |pair1, pair2| pair1[0].to_s <=> pair2[0].to_s }
       { :attributes => attributes }
     end
 
-    def visit_Arel_Nodes_In(o)
-      left = visit(o.left)
+    def visit_Arel_Nodes_In(node)
+      left = visit(node.left)
       return :unsupported if left != :id
 
-      [left, visit(o.right)]
+      [left, visit(node.right)]
     end
 
-    def visit_Arel_Nodes_Equality(o)
-      right = o.right
-      [visit(o.left), right ? visit(right) : nil]
+    def visit_Arel_Nodes_Equality(node)
+      right = node.right
+      [visit(node.left), right ? visit(right) : nil]
     end
 
-    def visit_Arel_Attributes_Attribute(o)
-      self.last_column = column_for(o.name)
-      o.name.to_sym
+    def visit_Arel_Attributes_Attribute(node)
+      self.last_column = column_for(node.name)
+      node.name.to_sym
     end
 
-    def literal(o)
-      if o == '?'
+    def literal(node)
+      if node == '?'
         column, value = @binds.shift
         value.to_s
       else
-        o.to_s
+        node.to_s
       end
     end
 
-    def visit_Array(o)
-      o.map {|value| quoted(value) }
+    def visit_Array(node)
+      node.map {|value| quoted(value) }
     end
 
     #TODO: We are actually not using this?
-    def quoted(o)
-      @model_class.connection.quote(o, self.last_column)
+    def quoted(node)
+      @model_class.connection.quote(node, self.last_column)
     end
 
     alias :visit_String                :literal
