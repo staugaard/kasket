@@ -4,7 +4,6 @@ rvm:
   - jruby
   - ree
   - rbx
-branches:
-  only:
-    - master
-    - activerecord-2.3
+gemfile:
+  - gemfiles/activerecord-2.3.gemfile
+  - gemfiles/activerecord-3.1.gemfile
