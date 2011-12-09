@@ -8,8 +8,17 @@ module Kasket
       end
     end
 
-    def find_by_sql_with_kasket(sql)
-      query = kasket_parser.parse(sanitize_sql(sql)) if use_kasket?
+    def find_by_sql_with_kasket(*args)
+      sql = args[0]
+
+      if use_kasket?
+        if sql.is_a?(String)
+          query = kasket_parser.parse(sanitize_sql(sql))
+        else
+          query = sql.to_kasket_query(self, args[1])
+        end
+      end
+
       if query && has_kasket_index_on?(query[:index])
         if query[:key].is_a?(Array)
           find_by_sql_with_kasket_on_id_array(query[:key])
@@ -21,11 +30,11 @@ module Kasket
               Array.wrap(value).collect { |record| instantiate(record.dup) }
             end
           else
-            store_in_kasket(query[:key], find_by_sql_without_kasket(sql))
+            store_in_kasket(query[:key], find_by_sql_without_kasket(*args))
           end
         end
       else
-        find_by_sql_without_kasket(sql)
+        find_by_sql_without_kasket(*args)
       end
     end
 

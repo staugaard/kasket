@@ -2,33 +2,36 @@
 require 'active_record'
 require 'active_support'
 
-require 'kasket/active_record_patches'
+require 'kasket/version'
+#require 'kasket/active_record_patches'
 
 module Kasket
   autoload :ConfigurationMixin, 'kasket/configuration_mixin'
   autoload :ReloadAssociationMixin, 'kasket/reload_association_mixin'
   autoload :Query, 'kasket/query'
+  autoload :Visitor, 'kasket/visitor'
+  autoload :SelectManagerMixin, 'kasket/select_manager_mixin'
+  autoload :RelationMixin, 'kasket/relation_mixin'
 
   CONFIGURATION = {:max_collection_size => 100}
-
-  class Version
-    MAJOR = 1
-    MINOR = 0
-    PATCH = 2
-    STRING = "#{MAJOR}.#{MINOR}.#{PATCH}"
-  end
 
   module_function
 
   def setup(options = {})
-    return if ActiveRecord::Base.extended_by.member?(Kasket::ConfigurationMixin)
+    return if ActiveRecord::Base.respond_to?(:has_kasket)
 
     CONFIGURATION[:max_collection_size] = options[:max_collection_size] if options[:max_collection_size]
 
     ActiveRecord::Base.extend(Kasket::ConfigurationMixin)
-    ActiveRecord::Associations::BelongsToAssociation.send(:include, Kasket::ReloadAssociationMixin)
-    ActiveRecord::Associations::BelongsToPolymorphicAssociation.send(:include, Kasket::ReloadAssociationMixin)
-    ActiveRecord::Associations::HasOneThroughAssociation.send(:include, Kasket::ReloadAssociationMixin)
+
+    if defined?(ActiveRecord::Relation)
+      ActiveRecord::Relation.send(:include, Kasket::RelationMixin)
+      Arel::SelectManager.send(:include, Kasket::SelectManagerMixin)
+    end
+
+    # ActiveRecord::Associations::BelongsToAssociation.send(:include, Kasket::ReloadAssociationMixin)
+    # ActiveRecord::Associations::BelongsToPolymorphicAssociation.send(:include, Kasket::ReloadAssociationMixin)
+    # ActiveRecord::Associations::HasOneThroughAssociation.send(:include, Kasket::ReloadAssociationMixin)
   end
 
   def self.cache_store=(options)

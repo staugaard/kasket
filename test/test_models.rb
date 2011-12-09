@@ -1,5 +1,12 @@
 require 'temping'
-include Temping
+
+if Temping.respond_to?(:create)
+  def create_model(name, &block)
+    Temping.create(name, &block)
+  end
+else
+  include Temping
+end
 
 create_model :comment do
   with_columns do |t|
@@ -33,6 +40,7 @@ create_model :post do
     self.updated_at = Time.now
     self.connection.execute("UPDATE posts SET updated_at = '#{updated_at.utc.to_s(:db)}' WHERE id = #{id}")
   end
+
   kasket_dirty_methods :make_dirty!
 end
 

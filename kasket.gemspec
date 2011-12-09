@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
 
-require 'kasket'
+require 'kasket/version'
 
 Gem::Specification.new do |s|
   s.name        = "kasket"
@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = "A write back caching layer on active record"
   s.description = "puts a cap on your queries"
 
-  s.add_runtime_dependency("activerecord", "~> 2.3.4")
+  s.add_runtime_dependency("activerecord", ">= 2.3.4", "< 3.2")
 
   s.add_development_dependency("rake")
   s.add_development_dependency("bundler")
