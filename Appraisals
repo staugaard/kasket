@@ -1,5 +1,5 @@
 appraise "activerecord-2.3" do
-  gem 'activerecord', '~> 2.3.4'
+  gem 'activerecord', '~> 2.3.6'
   gem 'temping',      '~> 1.3.0'
 end
 

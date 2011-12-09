@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = "A write back caching layer on active record"
   s.description = "puts a cap on your queries"
 
-  s.add_runtime_dependency("activerecord", ">= 2.3.4", "< 3.2")
+  s.add_runtime_dependency("activerecord", ">= 2.3.6", "< 3.2")
 
   s.add_development_dependency("rake")
   s.add_development_dependency("bundler")

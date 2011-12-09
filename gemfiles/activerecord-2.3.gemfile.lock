@@ -63,7 +63,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord (~> 2.3.4)
+  activerecord (~> 2.3.6)
   activerecord-jdbcsqlite3-adapter
   appraisal
   bundler
