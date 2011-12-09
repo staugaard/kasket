@@ -6,7 +6,7 @@ class ConfigurationMixinTest < ActiveSupport::TestCase
   context "Generating cache keys" do
     
     should "not choke on empty numeric attributes" do      
-      expected_cache_key = "kasket-#{Kasket::Version::STRING}/posts/version=4517/blog_id=NULL"
+      expected_cache_key = "kasket-#{Kasket::Version::PROTOCOL}/posts/version=4517/blog_id=NULL"
       query_attributes   = [ [:blog_id, ''] ]
       
       assert_equal expected_cache_key, Post.kasket_key_for(query_attributes)

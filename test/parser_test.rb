@@ -172,7 +172,7 @@ class ParserTest < ActiveSupport::TestCase
         else
           kasket_query = @parser.parse("SELECT * FROM `posts` WHERE (id = 1)")
         end
-        assert_match(/^kasket-#{Kasket::Version::STRING}\/posts\/version=4517\//, kasket_query[:key])
+        assert_match(/^kasket-#{Kasket::Version::PROTOCOL}\/posts\/version=4517\//, kasket_query[:key])
       end
 
       should "include all indexed attributes" do
