@@ -6,7 +6,8 @@ module Kasket
       if loaded?
         Kasket.clear_local if target.class.include?(WriteMixin)
       else
-        target_class = proxy_reflection.options[:polymorphic] ? association_class : proxy_reflection.klass
+        refl = respond_to?(:reflection) ? reflection : proxy_reflection
+        target_class = refl.options[:polymorphic] ? association_class : refl.klass
         Kasket.clear_local if target_class.include?(WriteMixin)
       end
 

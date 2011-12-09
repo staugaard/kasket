@@ -17,19 +17,32 @@ create_model :comment do
   end
 
   belongs_to :post
+  has_one :author, :through => :post
 
   has_kasket_on :post_id
+end
+
+create_model :author do
+  with_columns do |t|
+    t.string "name"
+  end
+
+  has_many :posts
+
+  has_kasket
 end
 
 create_model :post do
   with_columns do |t|
     t.string   "title"
+    t.integer  "author_id"
     t.integer  "blog_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   belongs_to :blog
+  belongs_to :author
   has_many :comments
 
   has_kasket
@@ -52,4 +65,5 @@ create_model :blog do
   end
 
   has_many :posts
+  has_many :comments, :through => :posts
 end

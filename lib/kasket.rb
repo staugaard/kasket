@@ -3,7 +3,6 @@ require 'active_record'
 require 'active_support'
 
 require 'kasket/version'
-#require 'kasket/active_record_patches'
 
 module Kasket
   autoload :ConfigurationMixin, 'kasket/configuration_mixin'
@@ -29,9 +28,9 @@ module Kasket
       Arel::SelectManager.send(:include, Kasket::SelectManagerMixin)
     end
 
-    # ActiveRecord::Associations::BelongsToAssociation.send(:include, Kasket::ReloadAssociationMixin)
-    # ActiveRecord::Associations::BelongsToPolymorphicAssociation.send(:include, Kasket::ReloadAssociationMixin)
-    # ActiveRecord::Associations::HasOneThroughAssociation.send(:include, Kasket::ReloadAssociationMixin)
+    ActiveRecord::Associations::BelongsToAssociation.send(:include, Kasket::ReloadAssociationMixin)
+    ActiveRecord::Associations::BelongsToPolymorphicAssociation.send(:include, Kasket::ReloadAssociationMixin)
+    ActiveRecord::Associations::HasOneThroughAssociation.send(:include, Kasket::ReloadAssociationMixin)
   end
 
   def self.cache_store=(options)
@@ -48,4 +47,3 @@ module Kasket
     end
   end
 end
-
