@@ -3,10 +3,6 @@ require 'active_support'
 require "digest/md5"
 
 module Kasket
-  autoload :ReadMixin, 'kasket/read_mixin'
-  autoload :WriteMixin, 'kasket/write_mixin'
-  autoload :DirtyMixin, 'kasket/dirty_mixin'
-  autoload :QueryParser, 'kasket/query_parser'
 
   module ConfigurationMixin
 

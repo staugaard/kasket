@@ -5,12 +5,16 @@ require 'active_support'
 require 'kasket/version'
 
 module Kasket
-  autoload :ConfigurationMixin, 'kasket/configuration_mixin'
+  autoload :ReadMixin,              'kasket/read_mixin'
+  autoload :WriteMixin,             'kasket/write_mixin'
+  autoload :DirtyMixin,             'kasket/dirty_mixin'
+  autoload :QueryParser,            'kasket/query_parser'
+  autoload :ConfigurationMixin,     'kasket/configuration_mixin'
   autoload :ReloadAssociationMixin, 'kasket/reload_association_mixin'
-  autoload :Query, 'kasket/query'
-  autoload :Visitor, 'kasket/visitor'
-  autoload :SelectManagerMixin, 'kasket/select_manager_mixin'
-  autoload :RelationMixin, 'kasket/relation_mixin'
+  autoload :Query,                  'kasket/query'
+  autoload :Visitor,                'kasket/visitor'
+  autoload :SelectManagerMixin,     'kasket/select_manager_mixin'
+  autoload :RelationMixin,          'kasket/relation_mixin'
 
   CONFIGURATION = {:max_collection_size => 100}
 
