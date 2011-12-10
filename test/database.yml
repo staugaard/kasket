@@ -4,6 +4,4 @@ test:
   database: kasket_test
   username: root
   password:
-  socket: /tmp/mysql.sock
-
-
+  host: 127.0.0.1
