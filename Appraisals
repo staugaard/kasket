@@ -5,3 +5,7 @@ end
 appraise "activerecord-3.1" do
   gem 'activerecord', '~> 3.1.1'
 end
+
+appraise "activerecord-3.2" do
+  gem 'activerecord', '~> 3.2.0.rc2'
+end
