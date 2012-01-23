@@ -1,15 +1,19 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    activemodel (3.2.0.rc2)
-      activesupport (= 3.2.0.rc2)
+    activemodel (3.2.0)
+      activesupport (= 3.2.0)
       builder (~> 3.0.0)
-    activerecord (3.2.0.rc2)
-      activemodel (= 3.2.0.rc2)
-      activesupport (= 3.2.0.rc2)
-      arel (~> 3.0.0.rc1)
+    activerecord (3.2.0)
+      activemodel (= 3.2.0)
+      activesupport (= 3.2.0)
+      arel (~> 3.0.0)
       tzinfo (~> 0.3.29)
-    activesupport (3.2.0.rc2)
+    activerecord-jdbc-adapter (1.2.1)
+    activerecord-jdbcmysql-adapter (1.2.1)
+      activerecord-jdbc-adapter (~> 1.2.1)
+      jdbc-mysql (~> 5.1.0)
+    activesupport (3.2.0)
       i18n (~> 0.6)
       multi_json (~> 1.0)
     appraisal (0.4.0)
@@ -20,12 +24,13 @@ GEM
     builder (3.0.0)
     columnize (0.3.6)
     i18n (0.6.0)
+    jdbc-mysql (5.1.13)
     linecache (0.46)
       rbx-require-relative (> 0.0.4)
     linecache19 (0.5.12)
       ruby_core_source (>= 0.1.4)
     metaclass (0.0.1)
-    mocha (0.10.2)
+    mocha (0.10.3)
       metaclass (~> 0.0.1)
     multi_json (1.0.4)
     mysql (2.8.1)
@@ -50,10 +55,11 @@ GEM
     tzinfo (0.3.31)
 
 PLATFORMS
+  java
   ruby
 
 DEPENDENCIES
-  activerecord (~> 3.2.0.rc2)
+  activerecord (~> 3.2.0)
   activerecord-jdbcmysql-adapter
   appraisal
   bundler
