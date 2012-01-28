@@ -10,9 +10,9 @@ GEM
       activesupport (= 3.1.3)
       arel (~> 2.2.1)
       tzinfo (~> 0.3.29)
-    activerecord-jdbc-adapter (1.2.1)
-    activerecord-jdbcmysql-adapter (1.2.1)
-      activerecord-jdbc-adapter (~> 1.2.1)
+    activerecord-jdbc-adapter (1.2.2)
+    activerecord-jdbcmysql-adapter (1.2.2)
+      activerecord-jdbc-adapter (~> 1.2.2)
       jdbc-mysql (~> 5.1.0)
     activesupport (3.1.3)
       multi_json (~> 1.0)
@@ -60,7 +60,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (~> 3.1.1)
-  activerecord-jdbcmysql-adapter
+  activerecord-jdbcmysql-adapter (~> 1.2.2)
   appraisal
   bundler
   mocha

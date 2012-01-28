@@ -3,9 +3,9 @@ GEM
   specs:
     activerecord (2.3.14)
       activesupport (= 2.3.14)
-    activerecord-jdbc-adapter (1.2.1)
-    activerecord-jdbcmysql-adapter (1.2.1)
-      activerecord-jdbc-adapter (~> 1.2.1)
+    activerecord-jdbc-adapter (1.2.2)
+    activerecord-jdbcmysql-adapter (1.2.2)
+      activerecord-jdbc-adapter (~> 1.2.2)
       jdbc-mysql (~> 5.1.0)
     activesupport (2.3.14)
     appraisal (0.4.0)
@@ -47,7 +47,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (~> 2.3.6)
-  activerecord-jdbcmysql-adapter
+  activerecord-jdbcmysql-adapter (~> 1.2.2)
   appraisal
   bundler
   mocha
