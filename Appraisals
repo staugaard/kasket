@@ -7,5 +7,5 @@ appraise "activerecord-3.1" do
 end
 
 appraise "activerecord-3.2" do
-  gem 'activerecord', '~> 3.2.0'
+  gem 'activerecord', '~> 3.2.1'
 end
