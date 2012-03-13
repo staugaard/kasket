@@ -12,10 +12,10 @@ module Kasket
       sql = args[0]
 
       if use_kasket?
-        if sql.is_a?(String)
-          query = kasket_parser.parse(sanitize_sql(sql))
-        else
+        if sql.respond_to?(:to_kasket_query)
           query = sql.to_kasket_query(self, args[1])
+        else
+          query = kasket_parser.parse(sanitize_sql(sql))
         end
       end
 

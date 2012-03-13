@@ -24,6 +24,11 @@ class ReadMixinTest < ActiveSupport::TestCase
       assert_equal @post_records, Post.find_by_sql('SELECT * FROM `posts` WHERE (id = 1)')
     end
 
+    should "support sql with ?" do
+      Kasket.cache.write("kasket-#{Kasket::Version::PROTOCOL}/posts/version=4517/id=1", @post_database_result)
+      assert_equal @post_records, Post.find_by_sql(['SELECT * FROM `posts` WHERE (id = ?)', 1])
+    end
+
     should "store results in kasket" do
       Post.find_by_sql('SELECT * FROM `posts` WHERE (id = 1)')
 
