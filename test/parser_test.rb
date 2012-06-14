@@ -8,6 +8,11 @@ class ParserTest < ActiveSupport::TestCase
       @parser = Kasket::QueryParser.new(Post)
     end
 
+    should "not support conditions with number as column (e.g. 0 = 1)" do
+      kasket_query = @parser.parse('SELECT * FROM `posts` WHERE (0 = 1)')
+      assert(!kasket_query)
+    end
+
     should 'not support IN queries in combination with other conditions' do
       parsed_query = @parser.parse('SELECT * FROM `posts` WHERE (`posts`.`id` IN (1,2,3) AND `posts`.`is_active` = 1)')
       assert(!parsed_query)
