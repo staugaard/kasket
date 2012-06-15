@@ -6,7 +6,7 @@ group :development do
   gem 'rake'
   gem 'bundler'
   gem 'shoulda'
-  gem 'mocha'
+  gem 'mocha', '~> 0.10.5'
   gem 'temping', '~> 1.3.0'
   gem 'sqlite3', :platforms => :ruby
   gem 'activerecord-jdbcsqlite3-adapter', :platforms => :jruby
