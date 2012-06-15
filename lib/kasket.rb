@@ -15,7 +15,7 @@ module Kasket
     MAJOR = 1
     MINOR = 0
     PATCH = 3
-    STRING = "#{MAJOR}.#{MINOR}.#{PATCH}.beta2"
+    STRING = "#{MAJOR}.#{MINOR}.#{PATCH}"
   end
 
   module_function
