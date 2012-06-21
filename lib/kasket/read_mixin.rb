@@ -43,7 +43,7 @@ module Kasket
       missing_ids = []
 
       keys.each do |key|
-        if value = key_value_map[key]
+        unless (value = key_value_map[key]).blank?
           key_value_map[key] = instantiate(value.dup)
         else
           missing_ids << key.split('=').last.to_i
@@ -85,3 +85,4 @@ module Kasket
 
   end
 end
+
