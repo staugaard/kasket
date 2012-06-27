@@ -1,19 +1,23 @@
 no_comments:
+  id: 1
   blog: a_blog
   title: no_comments
   author: mick
 
 has_two_comments:
+  id: 2
   blog: a_blog
   title: few_comments
   author: mick
 
 on_other_blog:
+  id: 3
   blog: other_blog
   title: no_comments
   author: eric
 
 has_many_comments:
+  id: 4
   blog: a_blog
   title: many_comments
   author: eric
