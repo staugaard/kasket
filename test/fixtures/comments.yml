@@ -1,9 +1,11 @@
 few_comments_1:
-  post: has_two_comments
+  id: 1
+  post_id: 2
   body: what ever body 1
 
 few_comments_2:
-  post: has_two_comments
+  id: 2
+  post_id: 2
   body: what ever body 2
 
 <% (1..10000).each do |i| %>
