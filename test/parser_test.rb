@@ -13,6 +13,8 @@ class ParserTest < ActiveSupport::TestCase
         end
       end
       scope.to_kasket_query
+    elsif ActiveRecord::VERSION::MAJOR == 3 && ActiveRecord::VERSION::MINOR == 0
+      @parser.parse(scope.scoped(options).to_sql)
     else
       sql = scope.send(:construct_finder_sql, options)
       @parser.parse(sql)

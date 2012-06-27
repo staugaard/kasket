@@ -11,15 +11,26 @@ module Kasket
 
     def initialize(model_class)
       @model_class = model_class
-      @supported_query_pattern = /^select \* from (?:`|")#{@model_class.table_name}(?:`|") where \((.*)\)(|\s+limit 1)\s*$/i
+      @supported_query_pattern = if AR30
+        /^select\s+(?:`#{@model_class.table_name}`.)?\* from (?:`|")#{@model_class.table_name}(?:`|") where (.*?)\s*$/i
+      else
+        /^select \* from (?:`|")#{@model_class.table_name}(?:`|") where \((.*)\)(|\s+limit 1)\s*$/i
+      end
       @table_and_column_pattern = /(?:(?:`|")?#{@model_class.table_name}(?:`|")?\.)?(?:`|")?([a-zA-Z]\w*)(?:`|")?/ # Matches: `users`.id, `users`.`id`, users.id, id
       @key_eq_value_pattern = /^[\(\s]*#{@table_and_column_pattern}\s+(=|IN)\s+#{VALUE}[\)\s]*$/ # Matches: KEY = VALUE, (KEY = VALUE), ()(KEY = VALUE))
     end
 
     def parse(sql)
       if match = @supported_query_pattern.match(sql)
+        where, limit = match[1], match[2]
+        if AR30 && where =~ /limit \d+\s*$/i
+          # limit is harder to find in rails 3.0 since where does not use surrounding braces
+          return unless where =~ /(.*?)(\s+limit 1)\s*$/i
+          where, limit = $1, $2
+        end
+
         query = Hash.new
-        query[:attributes] = sorted_attribute_value_pairs(match[1])
+        query[:attributes] = sorted_attribute_value_pairs(where)
         return nil if query[:attributes].nil?
 
         if query[:attributes].size > 1 && query[:attributes].map(&:last).any? {|a| a.is_a?(Array)}
@@ -28,7 +39,7 @@ module Kasket
         end
 
         query[:index] = query[:attributes].map(&:first)
-        query[:limit] = match[2].blank? ? nil : 1
+        query[:limit] = limit.blank? ? nil : 1
         query[:key] = @model_class.kasket_key_for(query[:attributes])
         query[:key] << '/first' if query[:limit] == 1 && !query[:index].include?(:id)
         query
