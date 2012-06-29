@@ -4,7 +4,3 @@ rvm:
   - jruby
   - ree
   - rbx
-gemfile:
-  - gemfiles/activerecord-2.3.gemfile
-  - gemfiles/activerecord-3.1.gemfile
-  - gemfiles/activerecord-3.2.gemfile

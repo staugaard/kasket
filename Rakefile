@@ -10,4 +10,6 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
-task :default => :test
+task :default do
+  sh "rake appraisal:install && rake appraisal test"
+end
