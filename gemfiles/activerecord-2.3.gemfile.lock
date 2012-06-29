@@ -40,6 +40,7 @@ GEM
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
     shoulda (2.11.3)
+    test-unit (2.2.0)
 
 PLATFORMS
   java
@@ -56,3 +57,4 @@ DEPENDENCIES
   ruby-debug
   ruby-debug19
   shoulda
+  test-unit (= 2.2)
