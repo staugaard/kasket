@@ -23,6 +23,7 @@ class Post < ActiveRecord::Base
   belongs_to :blog
   belongs_to :author
   has_many :comments
+  belongs_to :poly, :polymorphic => true
 
   has_kasket
   has_kasket_on :title
