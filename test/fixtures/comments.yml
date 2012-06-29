@@ -6,7 +6,7 @@ few_comments_2:
   post: has_two_comments
   body: what ever body 2
 
-<% (1..10000).each do |i| %>
+<% (1..10).each do |i| %>
 many_comments_<%= i %>:
   post: has_many_comments
   body: what ever body <%= i %>
