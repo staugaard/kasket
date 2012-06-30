@@ -6,7 +6,7 @@ class ConfigurationMixinTest < ActiveSupport::TestCase
   context "Generating cache keys" do
 
     should "not choke on empty numeric attributes" do
-      expected_cache_key = "kasket-#{Kasket::Version::PROTOCOL}/posts/version=4517/blog_id=null"
+      expected_cache_key = "kasket-#{Kasket::Version::PROTOCOL}/posts/version=#{POST_VERSION}/blog_id=null"
       query_attributes   = [ [:blog_id, ''] ]
 
       assert_equal expected_cache_key, Post.kasket_key_for(query_attributes)
@@ -27,7 +27,7 @@ class ConfigurationMixinTest < ActiveSupport::TestCase
 
     should "downcase string attributes" do
       query_attributes = [ [:title, 'ThIs'] ]
-      expected_cache_key = "kasket-#{Kasket::Version::PROTOCOL}/posts/version=4517/title='this'"
+      expected_cache_key = "kasket-#{Kasket::Version::PROTOCOL}/posts/version=#{POST_VERSION}/title='this'"
 
       assert_equal expected_cache_key, Post.kasket_key_for(query_attributes)
     end

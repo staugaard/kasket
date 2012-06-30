@@ -68,3 +68,5 @@ module Rails
 end
 
 require 'test_models'
+POST_VERSION = Post.column_names.join.sum
+COMMENT_VERSION = Comment.column_names.join.sum

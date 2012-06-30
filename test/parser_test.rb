@@ -99,7 +99,7 @@ class ParserTest < ActiveSupport::TestCase
     context "key generation" do
       should "include the table name and version" do
         kasket_query = parse(:conditions => {:id => 1})
-        assert_match(/^kasket-#{Kasket::Version::PROTOCOL}\/posts\/version=4517\//, kasket_query[:key])
+        assert_match(/^kasket-#{Kasket::Version::PROTOCOL}\/posts\/version=#{POST_VERSION}\//, kasket_query[:key])
       end
 
       should "include all indexed attributes" do
