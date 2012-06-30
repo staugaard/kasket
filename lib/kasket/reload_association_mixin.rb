@@ -14,7 +14,7 @@ module Kasket
     end
 
     def self.included(base)
-      base.alias_method_chain :reload, :kasket_clearing
+      base.alias_method_chain :reload, :kasket_clearing unless base.include?(self)
     end
   end
 end
