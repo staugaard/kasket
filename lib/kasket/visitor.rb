@@ -107,6 +107,11 @@ module Kasket
       end
     end
 
+    # only gets used on 1.8.7
+    def visit_Arel_Nodes_BindParam(x)
+      @binds.shift[1]
+    end
+
     def visit_Array(node)
       node.map {|value| quoted(value) }
     end

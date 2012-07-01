@@ -41,8 +41,12 @@ class ActiveSupport::TestCase
     Kasket.cache.clear
   end
 
-  def ar3?
-    ActiveRecord::VERSION::MAJOR == 3
+  def arel?
+    self.class.arel?
+  end
+
+  def self.arel?
+    ActiveRecord::VERSION::MAJOR >= 3 && ActiveRecord::VERSION::MINOR >= 1
   end
 end
 
