@@ -4,7 +4,7 @@ require 'kasket/query_parser'
 class ParserTest < ActiveSupport::TestCase
   def parse(options)
     scope = Post
-    if ar3?
+    if arel?
       options.each do |k,v|
         scope = case k
         when :conditions then scope.where(v)

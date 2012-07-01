@@ -4,7 +4,7 @@ gem 'appraisal'
 gem 'rake'
 gem 'bundler'
 gem 'shoulda'
-gem 'mocha'
+gem 'mocha', '~>0.10.5' # 0.11 breaks tests
 gem 'mysql', :platforms => :ruby
 gem 'activerecord-jdbcmysql-adapter', '~> 1.2.2', :platforms => :jruby
 gem 'ruby-debug',   :platforms => :mri_18
