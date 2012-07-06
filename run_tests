@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-rvm ree,1.9.3,jruby,rbx do 'bundle && rake appraisal:install && rake appraisal test'
+rvm ree,1.9.3,jruby,rbx do bundle exec rake
