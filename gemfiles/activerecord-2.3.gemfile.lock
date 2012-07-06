@@ -1,3 +1,9 @@
+PATH
+  remote: /Users/staugaard/code/kasket
+  specs:
+    kasket (2.0.0)
+      activerecord (>= 2.3.6, < 3.3)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -44,7 +50,7 @@ GEM
       shoulda-matchers (~> 1.0.0)
     shoulda-context (1.0.0)
     shoulda-matchers (1.0.0)
-    test-unit (2.2.0)
+    test-unit (2.5.1)
 
 PLATFORMS
   java
@@ -55,10 +61,11 @@ DEPENDENCIES
   activerecord-jdbcmysql-adapter (~> 1.2.2)
   appraisal
   bundler
+  kasket!
   mocha (~> 0.10.5)
   mysql
   rake
   ruby-debug
   ruby-debug19
   shoulda
-  test-unit (= 2.2)
+  test-unit (~> 2.5.1)
