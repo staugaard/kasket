@@ -13,8 +13,6 @@ require 'test/unit'
 require 'active_record'
 require 'active_record/fixtures'
 
-ENV['EMACS'] = 't' # colors for test output, remove when test-unit > 2.4.9
-
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'kasket'
