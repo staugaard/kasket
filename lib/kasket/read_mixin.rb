@@ -41,14 +41,16 @@ module Kasket
         end
       end
 
-      without_kasket do
-        find(missing_ids).each do |instance|
-          instance.store_in_kasket
-          key_value_map[instance.kasket_key] = instance
+      if missing_ids.any?
+        without_kasket do
+          find_all_by_id(missing_ids).each do |instance|
+            instance.store_in_kasket
+            key_value_map[instance.kasket_key] = instance
+          end
         end
       end
 
-      key_value_map.values
+      key_value_map.values.compact
     end
 
     protected

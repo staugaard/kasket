@@ -18,6 +18,8 @@ require 'kasket'
 
 Kasket.setup
 
+require 'shoulda'
+
 class ActiveSupport::TestCase
   include ActiveRecord::TestFixtures
 
