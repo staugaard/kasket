@@ -39,28 +39,26 @@ module Kasket
     end
 
     def find_by_sql_with_kasket_on_id_array(keys)
-      key_value_map = Kasket.cache.read_multi(*keys)
-      missing_ids = []
+      key_attributes_map = Kasket.cache.read_multi(*keys)
 
-      keys.each do |key|
-        if value = key_value_map[key]
-          key_value_map[key] = instantiate(value.dup)
-        else
-          missing_ids << key.split('=').last.to_i
-        end
-      end
+      found_keys, missing_keys = keys.partition{|k| key_attributes_map[k] }
+      found_keys.each{|k| key_attributes_map[k] = instantiate(key_attributes_map[k].dup) }
+      key_attributes_map.merge!(missing_records_from_db(missing_keys))
 
-      without_kasket do
-        find(missing_ids).each do |instance|
-          instance.store_in_kasket
-          key_value_map[instance.kasket_key] = instance
-        end
-      end
-
-      key_value_map.values
+      key_attributes_map.values.compact
     end
 
     protected
+
+      def missing_records_from_db(missing_keys)
+        return {} if missing_keys.empty?
+
+        id_key_map = Hash[missing_keys.map{|key| [key.split('=').last.to_i, key] }]
+
+        found = without_kasket { find_all_by_id(id_key_map.keys) }
+        found.each(&:store_in_kasket)
+        Hash[found.map{|record| [id_key_map[record.id], record] }]
+      end
 
       def store_in_kasket(key, records)
         if records.size == 1
