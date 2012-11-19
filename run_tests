@@ -1,5 +1,3 @@
 #!/usr/bin/env bash
 
-rvm ree,1.9.2,rbx,jruby rake test
-
-find . -name '*.rbc' -print0 | xargs -0 rm
+rvm ree,1.9.3,rbx,jruby do rake test
