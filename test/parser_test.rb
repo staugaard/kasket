@@ -28,6 +28,10 @@ class ParserTest < ActiveSupport::TestCase
       assert !parse(:conditions => "0 = 1")
     end
 
+    should "not support conditions with number as column and parans (e.g. 0 = 1)" do
+      assert !parse(:conditions => "(0 = 1)")
+    end
+
     should 'not support IN queries in combination with other conditions' do
       assert !parse(:conditions => {:id => [1,2,3], :is_active => true})
     end
@@ -35,6 +39,15 @@ class ParserTest < ActiveSupport::TestCase
     should "extract conditions" do
       kasket_query = parse(:conditions => {:title => 'red', :blog_id => 1})
       assert_equal [[:blog_id, "1"], [:title, "red"]], kasket_query[:attributes]
+    end
+
+    should "extract conditions with parans that do not surround" do
+      kasket_query = parse(:conditions => "(title = 'red') AND (blog_id = 1)")
+      if ActiveRecord::VERSION::STRING > "3.1.0"
+        assert !kasket_query
+      else
+        assert_equal [[:blog_id, "1"], [:title, "red"]], kasket_query[:attributes]
+      end
     end
 
     should "extract required index" do
