@@ -3,6 +3,7 @@ require 'active_record'
 require 'active_support'
 
 require 'kasket/active_record_patches'
+require 'kasket/version'
 
 module Kasket
   autoload :ConfigurationMixin, 'kasket/configuration_mixin'
@@ -10,13 +11,6 @@ module Kasket
   autoload :Query, 'kasket/query'
 
   CONFIGURATION = {:max_collection_size => 100}
-
-  class Version
-    MAJOR = 1
-    MINOR = 0
-    PATCH = 3
-    STRING = "#{MAJOR}.#{MINOR}.#{PATCH}"
-  end
 
   module_function
 
