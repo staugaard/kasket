@@ -5,6 +5,6 @@ rvm:
   - ree
   - rbx
 gemfile:
-  - gemfiles/activerecord-2.3.gemfile
-  - gemfiles/activerecord-3.1.gemfile
-  - gemfiles/activerecord-3.2.gemfile
+  - gemfiles/activerecord_2.3.gemfile
+  - gemfiles/activerecord_3.1.gemfile
+  - gemfiles/activerecord_3.2.gemfile
