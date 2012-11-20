@@ -1,11 +1,6 @@
 require File.expand_path("helper", File.dirname(__FILE__))
 
 class ReloadTest < ActiveSupport::TestCase
-  should "load a belongs to association" do
-    Kasket.expects(:clear_local)
-    Comment.first.post
-  end
-
   context "Loading a polymorphic belongs_to" do
     should "not clear cache when loading nil" do
       @post = Post.first
@@ -40,11 +35,6 @@ class ReloadTest < ActiveSupport::TestCase
         @post.poly = Comment.first
         @post.save!
         assert @post.poly
-      end
-
-      should "clear local when it is unloaded" do
-        Kasket.expects(:clear_local)
-        assert Post.first.poly
       end
 
       should "clear local when it is loaded" do
