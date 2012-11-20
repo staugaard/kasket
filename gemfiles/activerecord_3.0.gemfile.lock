@@ -1,0 +1,77 @@
+PATH
+  remote: /Users/mgrosser/code/tools/kasket
+  specs:
+    kasket (2.0.0)
+      activerecord (>= 2.3.6, < 3.3)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    activemodel (3.0.17)
+      activesupport (= 3.0.17)
+      builder (~> 2.1.2)
+      i18n (~> 0.5.0)
+    activerecord (3.0.17)
+      activemodel (= 3.0.17)
+      activesupport (= 3.0.17)
+      arel (~> 2.0.10)
+      tzinfo (~> 0.3.23)
+    activesupport (3.0.17)
+    appraisal (0.5.1)
+      bundler
+      rake
+    archive-tar-minitar (0.5.2)
+    arel (2.0.10)
+    builder (2.1.2)
+    columnize (0.3.6)
+    i18n (0.5.0)
+    linecache (0.46)
+      rbx-require-relative (> 0.0.4)
+    linecache19 (0.5.12)
+      ruby_core_source (>= 0.1.4)
+    metaclass (0.0.1)
+    mocha (0.10.5)
+      metaclass (~> 0.0.1)
+    mysql (2.8.1)
+    rake (10.0.2)
+    rbx-require-relative (0.0.9)
+    ruby-debug (0.10.4)
+      columnize (>= 0.1)
+      ruby-debug-base (~> 0.10.4.0)
+    ruby-debug-base (0.10.4)
+      linecache (>= 0.3)
+    ruby-debug-base19 (0.11.25)
+      columnize (>= 0.3.1)
+      linecache19 (>= 0.5.11)
+      ruby_core_source (>= 0.1.4)
+    ruby-debug19 (0.11.6)
+      columnize (>= 0.3.1)
+      linecache19 (>= 0.5.11)
+      ruby-debug-base19 (>= 0.11.19)
+    ruby_core_source (0.1.5)
+      archive-tar-minitar (>= 0.5.2)
+    shoulda (3.3.2)
+      shoulda-context (~> 1.0.1)
+      shoulda-matchers (~> 1.4.1)
+    shoulda-context (1.0.1)
+    shoulda-matchers (1.4.1)
+      activesupport (>= 3.0.0)
+    test-unit (2.5.2)
+    tzinfo (0.3.35)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  activerecord (~> 3.0.0)
+  activerecord-jdbcmysql-adapter (~> 1.2.2)
+  appraisal (~> 0.5)
+  bundler
+  kasket!
+  mocha (~> 0.10.5)
+  mysql (= 2.8.1)
+  rake
+  ruby-debug
+  ruby-debug19
+  shoulda
+  test-unit (~> 2.5.1)
