@@ -1,7 +1,7 @@
 PATH
   remote: /Users/staugaard/code/kasket
   specs:
-    kasket (2.0.0)
+    kasket (2.1.1)
       activerecord (>= 2.3.6, < 3.3)
 
 GEM
