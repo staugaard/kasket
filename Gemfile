@@ -2,7 +2,7 @@ source "http://rubygems.org"
 
 gemspec
 
-gem 'mysql', :platforms => :ruby
+gem 'mysql', '2.8.1', :platforms => :ruby
 gem 'activerecord-jdbcmysql-adapter', '~> 1.2.2', :platforms => :jruby
 gem 'ruby-debug',   :platforms => :mri_18
 gem 'ruby-debug19', :platforms => :mri_19
