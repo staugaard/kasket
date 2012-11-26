@@ -68,6 +68,17 @@ class ReloadTest < ActiveSupport::TestCase
       Kasket.expects(:clear_local)
       @post.reload
     end
+
+    should "reload via true" do
+      @comment = Comment.first
+      assert_equal "few_comments", @comment.post.title
+
+      Post.update_all("title = 'yyy'", :id => @comment.post_id)
+
+      assert_equal "few_comments", @comment.post.title
+      @comment.post(true) # it does not blow up
+      #assert_equal "yyy", @comment.post(true).title # TODO broken in all rails versions...
+    end
   end
 
   context "Reloading a has_one_through association" do
