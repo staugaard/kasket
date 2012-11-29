@@ -1,7 +1,7 @@
 PATH
   remote: /Users/staugaard/code/kasket
   specs:
-    kasket (2.1.1)
+    kasket (2.1.2)
       activerecord (>= 2.3.6, < 3.3)
 
 GEM
@@ -50,7 +50,7 @@ GEM
       shoulda-matchers (~> 1.0.0)
     shoulda-context (1.0.1)
     shoulda-matchers (1.0.0)
-    test-unit (2.5.2)
+    test-unit (2.5.3)
 
 PLATFORMS
   java
