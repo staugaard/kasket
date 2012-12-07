@@ -34,11 +34,13 @@ module Kasket
       Arel::SelectManager.send(:include, Kasket::SelectManagerMixin)
     end
 
-    ActiveRecord::Associations::BelongsToAssociation.send(:include, Kasket::ReloadAssociationMixin)
-    if ActiveRecord::VERSION::MAJOR == 2 || AR30
-      ActiveRecord::Associations::BelongsToPolymorphicAssociation.send(:include, Kasket::ReloadAssociationMixin)
+    if options[:assoliations_reload_hack]
+      ActiveRecord::Associations::BelongsToAssociation.send(:include, Kasket::ReloadAssociationMixin)
+      if ActiveRecord::VERSION::MAJOR == 2 || AR30
+        ActiveRecord::Associations::BelongsToPolymorphicAssociation.send(:include, Kasket::ReloadAssociationMixin)
+      end
+      ActiveRecord::Associations::HasOneThroughAssociation.send(:include, Kasket::ReloadAssociationMixin)
     end
-    ActiveRecord::Associations::HasOneThroughAssociation.send(:include, Kasket::ReloadAssociationMixin)
   end
 
   def self.cache_store=(options)
