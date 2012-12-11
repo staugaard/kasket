@@ -23,10 +23,13 @@ module Kasket
     def parse(sql)
       if match = @supported_query_pattern.match(sql)
         where, limit = match[1], match[2]
-        if AR30 && where =~ /limit \d+\s*$/i
-          # limit is harder to find in rails 3.0 since where does not use surrounding braces
-          return unless where =~ /(.*?)(\s+limit 1)\s*$/i
-          where, limit = $1, $2
+        if AR30
+          return if where =~ / (order by|group by|join|having) /i
+          if where =~ /limit \d+\s*$/i
+            # limit is harder to find in rails 3.0 since where does not use surrounding braces
+            return unless where =~ /(.*?)(\s+limit 1)\s*$/i
+            where, limit = $1, $2
+          end
         end
 
         query = Hash.new

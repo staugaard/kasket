@@ -34,6 +34,10 @@ class ParserTest < ActiveSupport::TestCase
       assert !parse(:conditions => "(0 = 1)")
     end
 
+    should "not support :order" do
+      assert !parse(:conditions => "id = 1", :order => "xxx")
+    end
+
     should 'not support IN queries in combination with other conditions' do
       assert !parse(:conditions => {:id => [1,2,3], :is_active => true})
     end

@@ -1,5 +1,5 @@
 PATH
-  remote: /Users/staugaard/code/kasket
+  remote: /Users/mgrosser/code/tools/kasket
   specs:
     kasket (2.2.0)
       activerecord (>= 2.3.6, < 3.3)
