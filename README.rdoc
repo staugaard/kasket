@@ -1,4 +1,7 @@
 = Kasket {<img src="https://secure.travis-ci.org/staugaard/kasket.png" />}[http://travis-ci.org/staugaard/kasket]
+
+= Moved to https://github.com/zendesk/kasket
+
 === Puts a cap on your queries
 A caching layer for ActiveRecord (2.3.x and 3.1.x)
 
