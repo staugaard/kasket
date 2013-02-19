@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/staugaard/kasket"
   s.summary     = "A write back caching layer on active record"
   s.description = "puts a cap on your queries"
+  s.license     = "Apache License Version 2.0"
 
   s.add_runtime_dependency("activerecord", ">= 2.3.6", "< 3.3")
 
