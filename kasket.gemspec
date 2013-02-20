@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.version     = Kasket::Version::STRING
   s.authors     = ["Mick Staugaard",   "Eric Chapweske"]
   s.email       = ["mick@zendesk.com", "eac@zendesk.com"]
-  s.homepage    = "http://github.com/staugaard/kasket"
+  s.homepage    = "http://github.com/zendesk/kasket"
   s.summary     = "A write back caching layer on active record"
   s.description = "puts a cap on your queries"
   s.license     = "Apache License Version 2.0"
