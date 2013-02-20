@@ -61,7 +61,7 @@ class ParserTest < ActiveSupport::TestCase
     end
 
     should "only support queries against its model's table" do
-      assert !parse(:conditions => {'users.id' => 2}, :from => 'apples')
+      assert !parse(:conditions => {'blogs.id' => 2}, :from => 'apples')
     end
 
     should "support cachable queries" do

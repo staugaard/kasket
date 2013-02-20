@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-rvm ree,1.9.3,jruby,rbx do bundle
+rvm 1.9.3,jruby do bundle
 rake appraisal:cleanup
-rvm ree,1.9.3,jruby,rbx do bundle exec rake appraisal:install
-rvm ree,1.9.3,jruby,rbx do bundle exec rake appraisal test
+rvm 1.9.3,jruby do bundle exec rake appraisal:install
+rvm 1.9.3,jruby do bundle exec rake appraisal test

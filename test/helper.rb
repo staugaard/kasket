@@ -10,6 +10,7 @@ if defined?(Debugger)
 end
 
 require 'test/unit'
+require 'mocha'
 require 'active_record'
 require 'active_record/fixtures'
 

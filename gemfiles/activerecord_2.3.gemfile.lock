@@ -7,28 +7,28 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    activerecord (2.3.14)
-      activesupport (= 2.3.14)
-    activerecord-jdbc-adapter (1.2.2.1)
-    activerecord-jdbcmysql-adapter (1.2.2.1)
-      activerecord-jdbc-adapter (~> 1.2.2.1)
+    activerecord (2.3.17)
+      activesupport (= 2.3.17)
+    activerecord-jdbc-adapter (1.2.7)
+    activerecord-jdbcmysql-adapter (1.2.7)
+      activerecord-jdbc-adapter (~> 1.2.7)
       jdbc-mysql (~> 5.1.0)
-    activesupport (2.3.14)
+    activesupport (2.3.17)
     appraisal (0.5.1)
       bundler
       rake
     archive-tar-minitar (0.5.2)
     columnize (0.3.6)
-    jdbc-mysql (5.1.13)
+    jdbc-mysql (5.1.22.1)
     linecache (0.46)
       rbx-require-relative (> 0.0.4)
     linecache19 (0.5.12)
       ruby_core_source (>= 0.1.4)
     metaclass (0.0.1)
-    mocha (0.10.5)
+    mocha (0.12.10)
       metaclass (~> 0.0.1)
     mysql (2.8.1)
-    rake (10.0.2)
+    rake (10.0.3)
     rbx-require-relative (0.0.9)
     ruby-debug (0.10.4)
       columnize (>= 0.1)
@@ -48,9 +48,9 @@ GEM
     shoulda (3.0.1)
       shoulda-context (~> 1.0.0)
       shoulda-matchers (~> 1.0.0)
-    shoulda-context (1.0.1)
+    shoulda-context (1.0.2)
     shoulda-matchers (1.0.0)
-    test-unit (2.5.3)
+    test-unit (2.5.4)
 
 PLATFORMS
   java
@@ -62,10 +62,10 @@ DEPENDENCIES
   appraisal (~> 0.5)
   bundler
   kasket!
-  mocha (~> 0.10.5)
+  mocha (~> 0.12.2)
   mysql (= 2.8.1)
   rake
   ruby-debug
   ruby-debug19
   shoulda
-  test-unit (~> 2.5.1)
+  test-unit (~> 2.5)
