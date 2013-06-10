@@ -1,7 +1,6 @@
 require File.expand_path("helper", File.dirname(__FILE__))
 
 class ReadMixinTest < ActiveSupport::TestCase
-
   context "find by sql with kasket" do
     setup do
       @post_database_result = { 'id' => 1, 'title' => 'Hello' }
@@ -20,25 +19,25 @@ class ReadMixinTest < ActiveSupport::TestCase
     end
 
     should "read results" do
-      Kasket.cache.write("kasket-#{Kasket::Version::PROTOCOL}/posts/version=#{POST_VERSION}/id=1", @post_database_result)
+      Kasket.cache.write("#{Post.kasket_key_prefix}id=1", @post_database_result)
       assert_equal @post_records, Post.find_by_sql('SELECT * FROM `posts` WHERE (id = 1)')
     end
 
     should "support sql with ?" do
-      Kasket.cache.write("kasket-#{Kasket::Version::PROTOCOL}/posts/version=#{POST_VERSION}/id=1", @post_database_result)
+      Kasket.cache.write("#{Post.kasket_key_prefix}id=1", @post_database_result)
       assert_equal @post_records, Post.find_by_sql(['SELECT * FROM `posts` WHERE (id = ?)', 1])
     end
 
     should "store results in kasket" do
       Post.find_by_sql('SELECT * FROM `posts` WHERE (id = 1)')
 
-      assert_equal @post_database_result, Kasket.cache.read("kasket-#{Kasket::Version::PROTOCOL}/posts/version=#{POST_VERSION}/id=1")
+      assert_equal @post_database_result, Kasket.cache.read("#{Post.kasket_key_prefix}id=1")
     end
 
     should "store multiple records in cache" do
       Comment.find_by_sql('SELECT * FROM `comments` WHERE (post_id = 1)')
-      stored_value = Kasket.cache.read("kasket-#{Kasket::Version::PROTOCOL}/comments/version=#{COMMENT_VERSION}/post_id=1")
-      assert_equal(["kasket-#{Kasket::Version::PROTOCOL}/comments/version=#{COMMENT_VERSION}/id=1", "kasket-#{Kasket::Version::PROTOCOL}/comments/version=#{COMMENT_VERSION}/id=2"], stored_value)
+      stored_value = Kasket.cache.read("#{Comment.kasket_key_prefix}post_id=1")
+      assert_equal(["#{Comment.kasket_key_prefix}id=1", "#{Comment.kasket_key_prefix}id=2"], stored_value)
       assert_equal(@comment_database_result, stored_value.map {|key| Kasket.cache.read(key)})
 
       Comment.expects(:find_by_sql_without_kasket).never
@@ -48,7 +47,7 @@ class ReadMixinTest < ActiveSupport::TestCase
 
     context "modifying results" do
       setup do
-        Kasket.cache.write("kasket-#{Kasket::Version::PROTOCOL}/posts/version=#{POST_VERSION}/id=1", {'id' => 1, 'title' => "asd"})
+        Kasket.cache.write("#{Post.kasket_key_prefix}id=1", {'id' => 1, 'title' => "asd"})
         @sql = 'SELECT * FROM `posts` WHERE (id = 1)'
         @record = Post.find_by_sql(@sql).first
         assert_equal "asd", @record.title # read from cache ?
