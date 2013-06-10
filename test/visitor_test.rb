@@ -8,7 +8,7 @@ class VisitorTest < ActiveSupport::TestCase
           :attributes=>[[:id, "1"]],
           :from=>"posts",
           :index=>[:id],
-          :key=>"kasket-#{Kasket::Version::PROTOCOL}/posts/version=#{POST_VERSION}/id=1"
+          :key=>"#{Post.kasket_key_prefix}id=1"
         }
         assert_equal expected, Post.where(:id => 1).to_kasket_query
       end
