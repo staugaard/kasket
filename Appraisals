@@ -1,6 +1,7 @@
 appraise "activerecord-2.3" do
   gem 'activerecord', '~> 2.3.6', :require => "active_record"
   gem 'mocha', '~> 0.12.2', :require => false
+  gem 'test-unit', '< 2.5.5'
 end
 
 appraise "activerecord-3.0" do
@@ -13,5 +14,4 @@ end
 
 appraise "activerecord-3.2" do
   gem 'activerecord', '~> 3.2.1', :require => "active_record"
-  gem 'mocha', '~> 0.12.2', :require => false
 end
