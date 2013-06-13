@@ -14,6 +14,7 @@ class Comment < ActiveRecord::Base
 end
 
 class Author < ActiveRecord::Base
+  serialize :metadata
   has_many :posts
 
   has_kasket

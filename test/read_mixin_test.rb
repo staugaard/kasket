@@ -1,6 +1,8 @@
 require File.expand_path("helper", File.dirname(__FILE__))
 
 class ReadMixinTest < ActiveSupport::TestCase
+  fixtures :authors
+
   context "find by sql with kasket" do
     setup do
       @post_database_result = { 'id' => 1, 'title' => 'Hello' }
@@ -62,6 +64,16 @@ class ReadMixinTest < ActiveSupport::TestCase
 
     end
 
+  end
+
+  should "support serialized attributes" do
+    author = authors(:mick)
+
+    author = Author.find(author.id)
+    assert_equal({'sex' => 'male'}, author.metadata)
+
+    author = Author.find(author.id)
+    assert_equal({'sex' => 'male'}, author.metadata)
   end
 
 end

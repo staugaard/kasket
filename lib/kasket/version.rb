@@ -5,6 +5,6 @@ module Kasket
     MINOR = 1
     PATCH = 0
     STRING = "#{MAJOR}.#{MINOR}.#{PATCH}"
-    PROTOCOL = 3
+    PROTOCOL = 4
   end
 end

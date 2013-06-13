@@ -1,5 +1,7 @@
 mick:
   name: Mick Staugaard
+  metadata:
+    sex: male
 
 eric:
   name: Eric Chapweske
