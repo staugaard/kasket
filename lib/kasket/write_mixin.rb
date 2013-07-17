@@ -78,6 +78,7 @@ module Kasket
       end
 
       model_class.after_save :clear_kasket_indices
+      model_class.after_touch :clear_kasket_indices if model_class.respond_to?(:after_touch)
       model_class.after_destroy :clear_kasket_indices
 
       model_class.alias_method_chain :reload, :kasket_clearing
