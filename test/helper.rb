@@ -2,6 +2,8 @@ require 'rubygems'
 
 require 'bundler'
 Bundler.setup
+# shoulda-matchers dependency:
+require 'active_support/core_ext/module/delegation'
 Bundler.require(:default, :development)
 
 if defined?(Debugger)
@@ -13,6 +15,7 @@ require 'test/unit'
 require 'mocha'
 require 'active_record'
 require 'active_record/fixtures'
+require 'test_after_commit' if ActiveRecord::Base.respond_to?(:after_commit)
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))

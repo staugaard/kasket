@@ -37,6 +37,7 @@ module Kasket
       end
 
       def kasket_keys
+        return @kasket_keys if @kasket_keys
         attribute_sets = [attributes.symbolize_keys]
 
         if changed?
@@ -57,10 +58,16 @@ module Kasket
         keys
       end
 
+      def remember_kasket_keys
+        @kasket_keys = kasket_keys
+      end
+
       def clear_kasket_indices
         kasket_keys.each do |key|
           Kasket.cache.delete(key)
         end
+        @kasket_keys = nil
+        true
       end
 
       def reload_with_kasket_clearing(*args)
@@ -77,8 +84,14 @@ module Kasket
         model_class.send(:alias_method, :kasket_cacheable?, :default_kasket_cacheable?)
       end
 
-      model_class.after_save :clear_kasket_indices
-      model_class.after_destroy :clear_kasket_indices
+      if model_class.respond_to?(:after_commit)
+        model_class.after_save    :remember_kasket_keys
+        model_class.after_destroy :remember_kasket_keys
+        model_class.after_commit  :clear_kasket_indices
+      else
+        model_class.after_save    :clear_kasket_indices
+        model_class.after_destroy :clear_kasket_indices
+      end
 
       model_class.alias_method_chain :reload, :kasket_clearing
 
