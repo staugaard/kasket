@@ -2,6 +2,8 @@ require 'rubygems'
 
 require 'bundler'
 Bundler.setup
+# shoulda-matchers dependency:
+require 'active_support/core_ext/module/delegation'
 Bundler.require(:default, :development)
 
 if defined?(Debugger)
