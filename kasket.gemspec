@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("bundler")
   s.add_development_dependency("appraisal", "~> 0.5")
   s.add_development_dependency("shoulda")
+  s.add_development_dependency("shoulda-matchers", "~> 2.3.0")
   s.add_development_dependency("mocha")
   s.add_development_dependency("test-unit", "~> 2.5")
 
