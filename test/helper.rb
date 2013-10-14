@@ -14,6 +14,7 @@ require 'mocha'
 require 'active_record'
 
 raise "Must configure #time_zone_aware_attributes prior to models" if defined?(Post)
+ENV['TZ'] = 'utc'
 ActiveRecord::Base.time_zone_aware_attributes = true
 
 require 'active_record/fixtures'

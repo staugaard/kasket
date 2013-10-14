@@ -82,7 +82,7 @@ class ReadMixinTest < ActiveSupport::TestCase
       post = Post.find(post.id)
       object = Kasket.cache.read("#{Post.kasket_key_prefix}id=#{post.id}")
 
-      assert_equal "2013-10-14 08:30:00", object["created_at"].to_s, object["created_at"].class
+      assert_equal "2013-10-14 15:30:00", object["created_at"].to_s, object["created_at"].class
     end
   end
 
