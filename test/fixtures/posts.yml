@@ -3,6 +3,7 @@ no_comments:
   blog: a_blog
   title: no_comments
   author: mick
+  created_at: 2013-10-14 15:30:00
 
 has_two_comments:
   id: 2
