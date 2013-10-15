@@ -20,7 +20,6 @@ ENV['TZ'] = 'utc'
 ActiveRecord::Base.time_zone_aware_attributes = true
 
 require 'active_record/fixtures'
-require 'test_after_commit' if ActiveRecord::Base.respond_to?(:after_commit)
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
