@@ -63,7 +63,7 @@ module Kasket
       def store_in_kasket(key, records)
         if records.size == 1
           if records.first.kasket_cacheable?
-            Kasket.cache.write(key, records.first.attributes.dup)
+            Kasket.cache.write(key, records.first.attributes_before_type_cast.dup)
           end
         elsif records.empty?
           ActiveRecord::Base.logger.info("[KASKET] would have stored an empty resultset") if ActiveRecord::Base.logger
@@ -71,7 +71,7 @@ module Kasket
           if records.all?(&:kasket_cacheable?)
             instance_keys = records.map do |record|
               instance_key = kasket_key_for_id(record.id)
-              Kasket.cache.write(instance_key, record.attributes.dup)
+              Kasket.cache.write(instance_key, record.attributes_before_type_cast.dup)
               instance_key
             end
 
