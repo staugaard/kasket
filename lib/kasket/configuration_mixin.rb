@@ -37,7 +37,12 @@ module Kasket
         key = attribute_value_pairs.map do |attribute, value|
           column = columns_hash[attribute.to_s]
           value = nil if value.blank?
-          attribute.to_s + '=' + connection.quote(column.type_cast(value), column).downcase
+          quoted_value = if column
+            connection.quote(column.type_cast(value), column).downcase
+          else
+            value.to_s
+          end
+          attribute.to_s << '=' << quoted_value
         end.join('/')
 
         if key.size > (250 - kasket_key_prefix.size) || key =~ /\s/

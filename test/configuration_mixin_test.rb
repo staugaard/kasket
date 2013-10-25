@@ -10,6 +10,13 @@ class ConfigurationMixinTest < ActiveSupport::TestCase
       assert_equal expected_cache_key, Post.kasket_key_for(query_attributes)
     end
 
+    should "not fail on unknown columns" do
+      expected_cache_key = "#{Post.kasket_key_prefix}does_not_exist=111"
+      query_attributes   = [ [:does_not_exist, '111'] ]
+
+      assert_equal expected_cache_key, Post.kasket_key_for(query_attributes)
+    end
+
     should "not generate keys longer that 255" do
       very_large_number = (1..999).to_a.join
       query_attributes  = [ [:blog_id, very_large_number] ]
