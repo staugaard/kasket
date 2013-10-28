@@ -126,6 +126,7 @@ module Kasket
     alias :visit_TrueClass             :literal
     alias :visit_FalseClass            :literal
     alias :visit_Arel_Nodes_SqlLiteral :literal
+    alias :visit_Nori_StringWithAttributes :quoted
 
     def method_missing(name, *args, &block)
       return :unsupported if name.to_s.start_with?('visit_')
