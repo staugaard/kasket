@@ -4,8 +4,10 @@ gemspec
 
 gem 'mysql', '2.8.1', :platforms => :ruby
 gem 'activerecord-jdbcmysql-adapter', '~> 1.2.2', :platforms => :jruby
-gem 'ruby-debug',   :platforms => :mri_18
-gem 'ruby-debug19', :platforms => :mri_19
+
+#gem 'ruby-debug',   :platforms => :mri_18
+#gem 'ruby-debug19', :platforms => :mri_19
+#gem 'debugger',   :platforms => :mri_20
 
 #these are overridden in the Appraisals file
 gem 'activerecord', '~> 3.2.0', :require => 'active_record'
