@@ -129,7 +129,10 @@ module Kasket
     alias :visit_Nori_StringWithAttributes :quoted
 
     def method_missing(name, *args, &block)
-      return :unsupported if name.to_s.start_with?('visit_')
+      if name.to_s.start_with?('visit_')
+        ActiveRecord::Base.logger.try(:info, "Kasket: Cannot visit unsupported class via #{name} and #{args.inspect}")
+        return :unsupported
+      end
       super
     end
 
