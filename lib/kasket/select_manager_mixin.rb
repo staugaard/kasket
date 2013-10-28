@@ -1,7 +1,11 @@
 module Kasket
   module SelectManagerMixin
     def to_kasket_query(klass, binds = [])
-      query = Kasket::Visitor.new(klass, binds).accept(ast)
+      begin
+        query = Kasket::Visitor.new(klass, binds).accept(ast)
+      rescue TypeError # unsupported object in ast
+        return nil
+      end
 
       return nil if query.nil? || query == :unsupported
       return nil if query[:attributes].blank?

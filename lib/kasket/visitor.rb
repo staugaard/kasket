@@ -126,12 +126,5 @@ module Kasket
     alias :visit_TrueClass             :literal
     alias :visit_FalseClass            :literal
     alias :visit_Arel_Nodes_SqlLiteral :literal
-
-    def visit(name, *args, &block)
-      super
-    rescue TypeError # raised by Arel's visit on NoMethodError
-      ActiveRecord::Base.logger.info "Kasket: Cannot visit unsupported class #{name} and #{args.inspect}"
-      :unsupported
-    end
   end
 end
