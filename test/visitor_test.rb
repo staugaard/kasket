@@ -4,7 +4,7 @@ module Nori
   class StringWithAttributes < String
   end
 
-  class AnotherString < String
+  class Unknown
   end
 end
 
@@ -34,8 +34,8 @@ class VisitorTest < ActiveSupport::TestCase
       should "notify on missing attribute" do
         log = StringIO.new
         ActiveRecord::Base.logger = Logger.new(log)
-        Post.where(:id => Nori::AnotherString.new("1")).to_kasket_query
-        assert_includes log.string, "Kasket: Cannot visit unsupported class via visit_Nori_AnotherString and"
+        Post.where(:id => Nori::Unknown.new).to_kasket_query
+        assert_includes log.string, "Kasket: Cannot visit unsupported class #<Nori::Unknown"
       end
     end
   end
