@@ -14,10 +14,12 @@ end
 require 'test/unit'
 require 'mocha'
 require 'active_record'
+require "logger"
 
 raise "Must configure #time_zone_aware_attributes prior to models" if defined?(Post)
 ENV['TZ'] = 'utc'
 ActiveRecord::Base.time_zone_aware_attributes = true
+ActiveRecord::Base.logger = Logger.new(StringIO.new)
 
 require 'active_record/fixtures'
 

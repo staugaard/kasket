@@ -32,10 +32,8 @@ class VisitorTest < ActiveSupport::TestCase
       end
 
       should "notify on missing attribute" do
-        log = StringIO.new
-        ActiveRecord::Base.logger = Logger.new(log)
+        ActiveRecord::Base.logger.expects(:info).with { |info| assert_includes info, "Kasket: Cannot visit unsupported class"; true }
         Post.where(:id => Nori::Unknown.new).to_kasket_query
-        assert_includes log.string, "Kasket: Cannot visit unsupported class #<Nori::Unknown"
       end
     end
   end
