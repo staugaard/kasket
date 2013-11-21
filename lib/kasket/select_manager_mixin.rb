@@ -22,7 +22,7 @@ module Kasket
       end
 
       query[:key] = klass.kasket_key_for(query[:attributes])
-      query[:key] << '/first' if query[:limit] == 1 && query[:index] != [:id]
+      query[:key] << '/first' if query[:limit] == 1 && query[:index].last != :id
 
       query
     end

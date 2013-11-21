@@ -48,4 +48,14 @@ class FindOneTest < ActiveSupport::TestCase
       other_blog.posts.find(post.id)
     end
   end
+
+  should "use same scope when finding on has_many" do
+    post = Blog.first.posts.first
+    blog = Blog.first
+    Rails.cache.clear
+
+    post = blog.posts.find_by_id(post.id)
+    key  = post.kasket_key.sub(%r{(/id=#{post.id})}, "/blog_id=#{Blog.first.id}\\1")
+    assert(Kasket.cache.read(key))
+  end
 end
