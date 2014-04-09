@@ -5,8 +5,7 @@ module Kasket
       if loaded?
         Kasket.clear_local if target.class.include?(WriteMixin)
       else
-        refl = (ActiveRecord::VERSION::MAJOR == 2 || AR30) ? proxy_reflection : reflection
-        target_class = (refl.options[:polymorphic] ? (respond_to?(:klass) ? klass : association_class) : refl.klass)
+        target_class = (reflection.options[:polymorphic] ? (respond_to?(:klass) ? klass : association_class) : reflection.klass)
         Kasket.clear_local if target_class && target_class.include?(WriteMixin)
       end
 

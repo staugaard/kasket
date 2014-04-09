@@ -16,8 +16,6 @@ module Kasket
   autoload :SelectManagerMixin,     'kasket/select_manager_mixin'
   autoload :RelationMixin,          'kasket/relation_mixin'
 
-  AR30 = (ActiveRecord::VERSION::MAJOR == 3 && ActiveRecord::VERSION::MINOR == 0)
-
   CONFIGURATION = {:max_collection_size => 100}
 
   module_function
@@ -36,9 +34,6 @@ module Kasket
 
     if options[:assoliations_reload_hack]
       ActiveRecord::Associations::BelongsToAssociation.send(:include, Kasket::ReloadAssociationMixin)
-      if ActiveRecord::VERSION::MAJOR == 2 || AR30
-        ActiveRecord::Associations::BelongsToPolymorphicAssociation.send(:include, Kasket::ReloadAssociationMixin)
-      end
       ActiveRecord::Associations::HasOneThroughAssociation.send(:include, Kasket::ReloadAssociationMixin)
     end
   end

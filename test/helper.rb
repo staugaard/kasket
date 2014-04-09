@@ -48,14 +48,6 @@ class ActiveSupport::TestCase
   def clear_cache
     Kasket.cache.clear
   end
-
-  def arel?
-    self.class.arel?
-  end
-
-  def self.arel?
-    ActiveRecord::VERSION::MAJOR >= 3 && ActiveRecord::VERSION::MINOR >= 1
-  end
 end
 
 ActiveSupport::TestCase.fixture_path = File.dirname(__FILE__) + "/fixtures/"

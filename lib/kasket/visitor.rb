@@ -25,7 +25,7 @@ module Kasket
     end
 
     def visit_Arel_Nodes_SelectStatement(node)
-      return :unsupported if !AR30 && node.with
+      return :unsupported if node.with
       return :unsupported if node.offset
       return :unsupported if node.lock
       return :unsupported if node.orders.any?
@@ -45,8 +45,8 @@ module Kasket
     def visit_Arel_Nodes_SelectCore(node)
       return :unsupported if node.groups.any?
       return :unsupported if node.having
-      return :unsupported if !AR30 && node.set_quantifier
-      return :unsupported if !AR30 && (!node.source || node.source.empty?)
+      return :unsupported if node.set_quantifier
+      return :unsupported if (!node.source || node.source.empty?)
       return :unsupported if node.projections.size != 1
 
       select = node.projections[0]

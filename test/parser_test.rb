@@ -4,21 +4,14 @@ require 'kasket/query_parser'
 class ParserTest < ActiveSupport::TestCase
   def parse(options)
     scope = Post
-    if arel?
-      options.each do |k,v|
-        scope = case k
-        when :conditions then scope.where(v)
-        else
-          scope.send(k, v)
-        end
+    options.each do |k,v|
+      scope = case k
+      when :conditions then scope.where(v)
+      else
+        scope.send(k, v)
       end
-      scope.to_kasket_query
-    elsif ActiveRecord::VERSION::MAJOR == 3 && ActiveRecord::VERSION::MINOR == 0
-      @parser.parse(scope.scoped(options).to_sql)
-    else
-      sql = scope.send(:construct_finder_sql, options)
-      @parser.parse(sql)
     end
+    scope.to_kasket_query
   end
 
   context "Parsing" do
