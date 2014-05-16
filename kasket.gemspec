@@ -1,7 +1,4 @@
-# -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-
-require 'kasket/version'
+require './lib/kasket/version'
 
 Gem::Specification.new do |s|
   s.name        = "kasket"
@@ -13,7 +10,7 @@ Gem::Specification.new do |s|
   s.description = "puts a cap on your queries"
   s.license     = "Apache License Version 2.0"
 
-  s.add_runtime_dependency("activerecord", ">= 3.1", "< 3.3")
+  s.add_runtime_dependency("activerecord", ">= 3.2", "< 3.3")
 
   s.add_development_dependency("rake")
   s.add_development_dependency("bundler")
@@ -23,6 +20,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency("test-unit", "~> 2.5")
 
   s.files        = Dir.glob("lib/**/*") + %w(README.rdoc)
-  s.test_files   = Dir.glob("test/**/*")
-  s.require_path = 'lib'
 end
