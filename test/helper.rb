@@ -16,6 +16,8 @@ Kasket.setup
 
 class ActiveSupport::TestCase
   include ActiveRecord::TestFixtures
+  self.fixture_path = File.dirname(__FILE__) + "/fixtures/"
+  fixtures :all
 
   def create_fixtures(*table_names)
     if block_given?
@@ -33,13 +35,6 @@ class ActiveSupport::TestCase
   def clear_cache
     Kasket.cache.clear
   end
-end
-
-ActiveSupport::TestCase.fixture_path = File.dirname(__FILE__) + "/fixtures/"
-$LOAD_PATH.unshift(ActiveSupport::TestCase.fixture_path)
-
-class ActiveSupport::TestCase
-  fixtures :all
 end
 
 module Rails

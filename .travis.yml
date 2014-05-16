@@ -3,5 +3,4 @@ rvm:
   - 2.0
   - jruby
 gemfile:
-  - gemfiles/activerecord_3.1.gemfile
   - gemfiles/activerecord_3.2.gemfile
