@@ -1,7 +1,7 @@
 require 'bundler/setup'
-Bundler::GemHelper.install_tasks
-
+require 'bundler/gem_tasks'
 require 'appraisal'
+require 'wwtd/tasks'
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
@@ -10,4 +10,4 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
-task :default => [:test]
+task :default => ['appraisal:cleanup', 'appraisal:install', :wwtd]

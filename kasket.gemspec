@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("appraisal", "~> 0.5")
   s.add_development_dependency("shoulda-context")
   s.add_development_dependency("mocha")
+  s.add_development_dependency("wwtd")
   s.add_development_dependency("test-unit", "~> 2.5")
 
   s.files        = Dir.glob("lib/**/*") + %w(README.rdoc)
