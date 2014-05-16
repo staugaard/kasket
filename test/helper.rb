@@ -1,30 +1,15 @@
-require 'rubygems'
-
-require 'bundler'
-Bundler.setup
-# shoulda-matchers dependency:
-require 'active_support/core_ext/module/delegation'
-Bundler.require(:default, :development)
-
-if defined?(Debugger)
-  ::Debugger.start
-  ::Debugger.settings[:autoeval] = true if ::Debugger.respond_to?(:settings)
-end
-
+require 'bundler/setup'
 require 'test/unit'
+require 'shoulda/context'
 require 'mocha/setup'
 require 'active_record'
-require "logger"
+require 'logger'
 
-raise "Must configure #time_zone_aware_attributes prior to models" if defined?(Post)
 ENV['TZ'] = 'UTC'
 ActiveRecord::Base.time_zone_aware_attributes = true
 ActiveRecord::Base.logger = Logger.new(StringIO.new)
 
 require 'active_record/fixtures'
-
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-$LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'kasket'
 
 Kasket.setup

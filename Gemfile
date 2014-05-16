@@ -9,4 +9,4 @@ gem 'activerecord-jdbcmysql-adapter', '~> 1.2', :platforms => :jruby
 
 #these are overridden in the Appraisals file
 gem 'activerecord', '~> 3.2.0', :require => 'active_record'
-gem 'mocha', '~> 0.13.2', :require => false
+gem 'mocha', :require => false
